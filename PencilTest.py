@@ -77,7 +77,7 @@ if __name__=='__main__':
 			if lines is not None:
 				for line in lines:
 					cv.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(255,0,0),1)
-			cv.imshow("Hugh Lines", img)
+			cv.imshow("Hough Lines", img)
 			
 			#Bounding Rectangles
 			img2 = np.copy(roi)
