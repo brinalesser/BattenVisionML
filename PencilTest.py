@@ -3,6 +3,15 @@ import numpy as np
 import math
 import argparse
 from statistics import mean
+from matplotlib import pyplot as plt
+import time
+
+b_low = 95
+b_high = 110
+g_low = 170
+g_high = 195
+r_low = 210
+r_high = 220
 
 def detect_frame(frame):
     img = cv.medianBlur(frame, 5)
@@ -18,55 +27,53 @@ def detect_frame(frame):
     cv.imshow("Frame", frame)
     return frame[y+15:y+h-15,x+15:x+w-15]
 
-prev_x = []
-prev_y = []
-prev_w = []
-prev_h = []
-prev_lines = []
-count = 0
 def pencil_lines(im):
-    global prev_x, prev_y, prev_w, prev_h, count
-    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    blur1 = cv.medianBlur(gray, 3)
-    blur2 = cv.bilateralFilter(blur1, 3, 75, 75)
-    edges = cv.Canny(image=blur2, threshold1=0, threshold2=255)
-    contours, hierarchy = cv.findContours(edges, cv.RETR_LIST, cv.CHAIN_APPROX_NONE)
-       
-    areas = [cv.contourArea(c) for c in contours]
-    idx = np.argmax(areas)
-    x,y,w,h = cv.boundingRect(contours[idx])
+    gray = cv.cvtColor(im, cv.COLOR_BGR2GRAY)
+    blur = cv.medianBlur(gray, 3)
+    blur2 = cv.bilateralFilter(blur, 5, 75, 75)
+    edges = cv.Canny(image=blur2, threshold1=0, threshold2=150)
+    contours, hierarchy = cv.findContours(edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    
+    areas = [cv.contourArea(c) for c in contours]    
+    
+    flag = False
+    x = 0
+    y = 0
+    w = 0
+    h = 0
+    while not flag:
+        idx = np.argmax(areas)
+        x,y,w,h = cv.boundingRect(contours[idx])
+        bounded = np.copy(im[y:y+h,x:x+w])
 
-    if count < 9:
-        prev_x.append(x)
-        prev_y.append(y)
-        prev_w.append(w)
-        prev_h.append(h)
-        lines = cv.HoughLinesP(edges[y:y+h,x:x+w], rho=1, theta=np.pi/90, threshold=5, minLineLength=50, maxLineGap=10)
-        prev_lines.append(lines)
-        count += 1
-    else:
-        prev_x.pop(0)
-        prev_x.append(x)
-        prev_y.pop(0)
-        prev_y.append(y)
-        prev_w.pop(0)
-        prev_w.append(w)
-        prev_h.pop(0)
-        prev_h.append(h)
-        x = int(mean(prev_x))
-        y = int(mean(prev_y))
-        w = int(mean(prev_w))
-        h = int(mean(prev_h))
-        
-        roi_edges = edges[y:y+h,x:x+w]
-        roi = im[y:y+h,x:x+w]
-        lines = cv.HoughLinesP(roi_edges, rho=1, theta=np.pi/90, threshold=5, minLineLength=50, maxLineGap=10)
-        #TODO: AVERAGE LINES
-        if lines is not None:
-            for line in lines:
-                cv.line(roi,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(255,0,0),1)
-        cv.imshow("Lines", roi)
-            
+        bgr_planes = cv.split(bounded)       
+        b_hist = cv.calcHist(bgr_planes, [0], None, [256], (0, 256), accumulate=False)
+        g_hist = cv.calcHist(bgr_planes, [1], None, [256], (0, 256), accumulate=False)
+        r_hist = cv.calcHist(bgr_planes, [2], None, [256], (0, 256), accumulate=False)
+
+        idx_b = np.argmax(b_hist)
+        idx_g = np.argmax(g_hist)
+        idx_r = np.argmax(r_hist)
+
+        if( idx_b > b_low and idx_b < b_high and \
+            idx_g > g_low and idx_g < g_high and \
+            idx_r > r_low and idx_r < r_high ):
+            flag = True
+        else:
+            if(len(areas) > 2):
+                areas.pop(idx)
+            else:
+                break
+    
+    if flag:
+        cv.rectangle(im, (x,y), (x+w,y+h), (0,255,0),2)
+    
+    width = int(im.shape[1] * 2)
+    height = int(im.shape[0] * 2)
+    dim = (width, height)
+    resized = cv.resize(im, dim, interpolation=cv.INTER_AREA)
+    cv.imshow("Pencils",resized)
+    
 def batten_lines(img, pencil):
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     blur1 = cv.medianBlur(gray, 5)
