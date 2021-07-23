@@ -1,3 +1,6 @@
+#Adapted from code found here:
+#https://stackoverflow.com/questions/44480131/python-opencv-hsv-range-finder-creating-trackbars
+	
 import cv2
 import numpy as np
 
