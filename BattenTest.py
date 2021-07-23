@@ -1,25 +1,12 @@
 import cv2 as cv
 import numpy as np
 
-#pencil values
-b_low = 85
-b_high = 120
-g_low = 160
-g_high = 205
-r_low = 200
-r_high = 230
-
-def detect_background(im):
-    blur = cv.medianBlur(im, 5)
-    gray = cv.cvtColor(blur, cv.COLOR_BGR2GRAY)
-    ret, thresh = cv.threshold(gray, 200, 255, cv.THRESH_BINARY)
-    contours, hierarchy = cv.findContours(thresh, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    
-    areas = [cv.contourArea(c) for c in contours]
-    idx = np.argmax(areas)
-    
-    x,y,w,h = cv.boundingRect(contours[idx])
-    return im[y+15:y+h-15,x+15:x+w-15]
+b_low = 130
+b_high = 180
+g_low = 130
+g_high = 190
+r_low = 150
+r_high = 200
 
 def detect_stack(im):
     ret = im.copy()
@@ -62,7 +49,7 @@ def detect_stack(im):
     else:
         return []
     
-def detect_pencils(im):
+def detect_battens(im):
     ret = im.copy()
     gray = cv.cvtColor(im, cv.COLOR_BGR2GRAY)
     blur = cv.bilateralFilter(gray, 7, 75, 75)
@@ -74,8 +61,8 @@ def detect_pencils(im):
     return ret
     
 if __name__=='__main__':
-
-    cap = cv.VideoCapture(0)
+    count = 0
+    cap = cv.VideoCapture("./Videos/vid1.mp4")
     if(cap.isOpened() == False):   
         print("Video failed to open")
     pause = False
@@ -84,18 +71,15 @@ if __name__=='__main__':
             ret, frame = cap.read()
         if(ret):
             cv.imshow("Frame",frame)
-            paper = detect_background(frame.copy())
-            cv.imshow("Paper", paper)
-            stack = detect_stack(paper.copy())
+            stack = detect_stack(frame.copy())
             if len(stack) > 0:
                 cv.imshow("Stack", stack)
-                
                 width = int(stack.shape[1] * 2)
                 height = int(stack.shape[0] * 2)
                 dim = (width, height)
                 resized = cv.resize(stack, dim, interpolation=cv.INTER_AREA)
-                pencils = detect_pencils(resized.copy())
-                cv.imshow("Pencils", pencils)
+                battens = detect_battens(resized.copy())
+                cv.imshow("Battens", battens)
         else:
             print("Failed to read frame")
             break
@@ -103,8 +87,10 @@ if __name__=='__main__':
         if(key == 27 or key == 113): #esc or q
             break
         elif(key == 115): #s
-            cv.imwrite("Screenshot.jpg", frame)
+            cv.imwrite("Battens"+str(count)+".jpg", battens)
+            count += 1
         elif(key == 112): #p
             pause = not pause
         elif(key != -1):
             print(key)
+

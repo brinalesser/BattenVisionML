@@ -1,6 +1,41 @@
 import cv2 as cv
 import numpy as np
-import time
+'''
+Blue Max Idx: 156, Blue Max: [711.]
+Blue Max Idx: 162, Blue Max: [1404.]
+Blue Max Idx: 161, Blue Max: [1623.]
+Blue Max Idx: 144, Blue Max: [1202.]
+Blue Max Idx: 140, Blue Max: [1873.]
+Blue Max Idx: 145, Blue Max: [5494.]
+Blue Max Idx: 158, Blue Max: [2575.]
+Blue Max Idx: 130, Blue Max: [1428.]
+Blue Max Idx: 130, Blue Max: [742.]
+Blue Max Idx: 169, Blue Max: [529.]
+Blue Max Idx: 175, Blue Max: [984.]
+
+Green Max Idx: 185, Green Max: [778.]
+Green Max Idx: 170, Green Max: [1424.]
+Green Max Idx: 174, Green Max: [1650.]
+Green Max Idx: 150, Green Max: [1235.]
+Green Max Idx: 153, Green Max: [1806.]
+Green Max Idx: 158, Green Max: [6499.]
+Green Max Idx: 255, Green Max: [2855.]
+Green Max Idx: 138, Green Max: [1891.]
+Green Max Idx: 146, Green Max: [780.]
+Green Max Idx: 184, Green Max: [627.]
+Green Max Idx: 166, Green Max: [1469.]
+
+Red Max Idx: 192, Red Max: [1225.]
+Red Max Idx: 196, Red Max: [1613.]
+Red Max Idx: 195, Red Max: [2193.]
+Red Max Idx: 157, Red Max: [1930.]
+Red Max Idx: 168, Red Max: [1323.]
+Red Max Idx: 163, Red Max: [6467.]
+Red Max Idx: 255, Red Max: [28286.]
+Red Max Idx: 160, Red Max: [1776.]
+Red Max Idx: 152, Red Max: [639.]
+Red Max Idx: 195, Red Max: [786.]
+Red Max Idx: 185, Red Max: [1341.]
 
 title_window = 'Trackbars'
 cv.namedWindow(title_window)
@@ -56,7 +91,7 @@ cv.createTrackbar("Green Low Threshold", title_window, g_low, bgr_max, tb_cb_gl)
 cv.createTrackbar("Green High Threshold", title_window, g_high, bgr_max, tb_cb_gh)
 cv.createTrackbar("Red Low Threshold", title_window, r_low, bgr_max, tb_cb_rl)
 cv.createTrackbar("Red High Threshold", title_window, r_high, bgr_max, tb_cb_rh)
-
+'''
 def detect_frame(frame):
     img = cv.medianBlur(frame, 5)
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -79,7 +114,6 @@ def detect(im):
     contours, hierarchy = cv.findContours(edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     
     areas = [cv.contourArea(c) for c in contours]
-    
     
     for contour in contours:
         img = np.copy(im)
@@ -104,40 +138,7 @@ def detect(im):
         while cv.waitKey(0) == -1:
             pass
     
-    '''
-    found = False
-    count = 0
-    while not found:
-        idx = np.argmax(areas)
-        x,y,w,h = cv.boundingRect(contours[idx])
-        
-        img = np.copy(im)
-        cv.rectangle(img, (x,y), (x+w,y+h), (0,255,0),2)
-        cv.imshow("Img",img)
-        
-        bounded = im[y:y+h,x:x+w]
-        bgr_planes = cv.split(bounded)     
-        b_hist = cv.calcHist(bgr_planes, [0], None, [256], (0, 256), accumulate=False)
-        g_hist = cv.calcHist(bgr_planes, [1], None, [256], (0, 256), accumulate=False)
-        r_hist = cv.calcHist(bgr_planes, [2], None, [256], (0, 256), accumulate=False)
-
-        idx_b = np.argmax(b_hist)
-        idx_g = np.argmax(g_hist)
-        idx_r = np.argmax(r_hist)
-
-        if(idx_b > b_low and idx_b < b_high and idx_g > g_low and idx_g < g_high and idx_r > r_low and idx_r < r_high):
-            found = True
-            print("Blue Max Idx: "+ str(idx_b) + ", Blue Max: " + str(b_hist[idx_b]))
-            print("Green Max Idx: "+ str(idx_g) + ", Green Max: " + str(g_hist[idx_g]))
-            print("Red Max Idx: "+ str(idx_r) + ", Red Max: " + str(r_hist[idx_r]))
-        elif(len(areas) > 2):
-            areas.pop(idx)
-        else:
-            print("Not found")
-            break
-'''
-    
-cap = cv.VideoCapture(0)
+cap = cv.VideoCapture("./Videos/vid1.mp4")
 if(cap.isOpened() == False):
     print("Video failed to open")
 
@@ -146,8 +147,9 @@ while(cap.isOpened()):
     if not paused:
         ret, frame = cap.read()
     if(ret):
-        bounded_frame = detect_frame(frame.copy())
-        detect(bounded_frame)
+        #bounded_frame = detect_frame(frame.copy())
+        #detect(bounded_frame)
+        detect(frame.copy())
     else:
         print("error reading frame")
             
