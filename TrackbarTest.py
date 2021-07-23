@@ -18,11 +18,13 @@ thresh2 = 200
 hl_rho = 1
 hl_theta = np.pi / 180
 hl_thresh = 5
-hl_minLineLen = 50
-hl_maxLineGap = 10
+hl_minLineLen = 100
+hl_maxLineGap = 50
 contour_mode = 0
 contour_method = 0
 contour_select = 0
+L2gradient = 0
+aperture_size = 3
 
 '''
 
@@ -30,12 +32,14 @@ Edge Detection for Battens
 
 '''
 def batten_lines(img):
-    global mb_ksize, bf_dsize, bf_scolor, bf_sspace, thresh1, thresh2, hl_rho, hl_theta, hl_thresh, hl_minLineLen, hl_maxLineGap
-
+    global mb_ksize, bf_dsize, bf_scolor, bf_sspace, thresh1, thresh2, hl_rho, hl_theta, hl_thresh, hl_minLineLen, hl_maxLineGap, aperture_size, L2gradient
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     gray = cv.medianBlur(gray, mb_ksize)
     blur = cv.bilateralFilter(gray, bf_dsize, bf_scolor, bf_sspace)
-    edges = cv.Canny(blur, thresh1, thresh2)
+    gradient = True
+    if L2gradient == 0:
+        gradient = False
+    edges = cv.Canny(image=blur, threshold1=thresh1, threshold2=thresh2, apertureSize=aperture_size, L2gradient=gradient)
     lines = cv.HoughLinesP(edges, hl_rho, hl_theta, hl_thresh, hl_minLineLen, hl_maxLineGap)
     if lines is not None:
         for line in lines:
@@ -48,7 +52,7 @@ Edge Detection for Batten Stacks
 
 '''
 def batten_bounds(img):
-    global contour_mode, contour_method, contour_select, bf_dsize, bf_scolor, bf_sspace, thresh1, thresh2
+    global contour_mode, contour_method, contour_select, bf_dsize, bf_scolor, bf_sspace, thresh1, thresh2, aperture_size, L2gradient
     mode = cv.RETR_TREE
     if contour_mode == 0:
         mode = cv.RETR_LIST
@@ -59,7 +63,10 @@ def batten_bounds(img):
   
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY) 
     blur = cv.bilateralFilter(gray, bf_dsize, bf_scolor, bf_sspace)
-    edges = cv.Canny(blur, thresh1, thresh2)
+    gradient = True
+    if L2gradient == 0:
+        gradient = False
+    edges = cv.Canny(image=blur, threshold1=thresh1, threshold2=thresh2, apertureSize=aperture_size, L2gradient=gradient)
     contours, hierarchy = cv.findContours(edges, mode, method)
     
     if(contour_select == 0):
@@ -78,13 +85,35 @@ Trackbar Setup
 '''
 def tb_cb():
     global image
-    img1 = np.copy(image)
+    #img1 = np.copy(image)
     img2 = np.copy(image)
-    batten_lines(img1)
+    #batten_lines(img1)
     batten_bounds(img2)
+
+def tb_cb_l2(val):
+    global L2gradient
+    L2gradient = val
+    tb_cb()
+L2gradient_max = 1
+L2gradient_tb = "Canny Edge Detection - L2Gradient used or not"
+cv.createTrackbar(L2gradient_tb, title_window, L2gradient, L2gradient_max, tb_cb_l2)    
+    
+def tb_cb_as(val):
+    global aperture_size
+    if val % 2 != 1:
+        val += 1
+    if val < 3:
+        val = 3
+    aperture_size = val
+    tb_cb()
+aperture_size_max = 7
+aperture_size_tb = "Canny Edge Detection - Aperture Size"
+cv.createTrackbar(aperture_size_tb, title_window, aperture_size, aperture_size_max, tb_cb_as)    
 
 def tb_cb_mb(val):
     global mb_ksize
+    if val % 2 != 1:
+        val += 1
     mb_ksize = val
     tb_cb()
 mb_ksize_max = 20
@@ -195,15 +224,11 @@ contour_select_max = 1
 contour_select_tb = "Contour Select - Draw all contours or bounding Rectangles"
 cv.createTrackbar(contour_select_tb, title_window, contour_select, contour_select_max, tb_cb_select)
 
-
-    
-    
 '''
 
 Main
 
 '''
-
 if image is None:
     print("Error reading image file")
 else:
