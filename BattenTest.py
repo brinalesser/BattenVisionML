@@ -9,11 +9,14 @@ r_low = 150
 r_high = 200
 
 def detect_stack(im):
+    #TODO
+    #NEED TO FIND A WAY TO REMOVE BACKGROUND AND ONLY LOOK AT BATTENS
+    #MAYBE USE HSV OR OTHER COLOR FILTER WITH BITMASK
     ret = im.copy()
     gray = cv.cvtColor(im, cv.COLOR_BGR2GRAY)
     blur = cv.medianBlur(gray, 5)
     blur2 = cv.bilateralFilter(blur, 7, 75, 75)
-    edges = cv.Canny(image=blur2, threshold1=0, threshold2=150)
+    edges = cv.Canny(image=blur2, threshold1=100, threshold2=200)
     contours, hierarchy = cv.findContours(edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     
     areas = [cv.contourArea(c) for c in contours]    
