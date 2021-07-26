@@ -8,13 +8,24 @@ g_high = 190
 r_low = 150
 r_high = 200
 
+h_low = 0
+h_high = 110
+s_low = 0
+s_high = 110
+v_low = 110
+v_high = 210
+
 def detect_stack(im):
-    #TODO
-    #NEED TO FIND A WAY TO REMOVE BACKGROUND AND ONLY LOOK AT BATTENS
-    #MAYBE USE HSV OR OTHER COLOR FILTER WITH BITMASK
     ret = im.copy()
     gray = cv.cvtColor(im, cv.COLOR_BGR2GRAY)
-    blur = cv.medianBlur(gray, 5)
+    hsv = cv.cvtColor(im, cv.COLOR_BGR2HSV)
+
+    lower_hsv = np.array([h_low, s_low, v_low])
+    higher_hsv = np.array([h_high, s_high, v_high])
+    mask = cv.inRange(hsv, lower_hsv, higher_hsv)
+    hsv_filter = cv.bitwise_and(frame, frame, mask=mask)
+    
+    blur = cv.medianBlur(hsv_filter, 5)
     blur2 = cv.bilateralFilter(blur, 7, 75, 75)
     edges = cv.Canny(image=blur2, threshold1=100, threshold2=200)
     contours, hierarchy = cv.findContours(edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
@@ -46,7 +57,8 @@ def detect_stack(im):
             flag = True
         else:
             areas.pop(idx)
-
+    stck = np.copy(ret[y:y+h,x:x+w])
+    cv.imshow("Ret",stck) 
     if flag:
         return ret[y:y+h,x:x+w]
     else:
@@ -56,8 +68,9 @@ def detect_battens(im):
     ret = im.copy()
     gray = cv.cvtColor(im, cv.COLOR_BGR2GRAY)
     blur = cv.bilateralFilter(gray, 7, 75, 75)
-    edges = cv.Canny(image=blur, threshold1=0, threshold2=150)
-    lines = cv.HoughLinesP(edges, rho=1, theta=np.pi/90, threshold=2, minLineLength=100, maxLineGap=20)
+    #blur = cv.GaussianBlur(gray, (5,5), 0)
+    edges = cv.Canny(image=blur, threshold1=0, threshold2=255)
+    lines = cv.HoughLinesP(edges, rho=1, theta=np.pi/90, threshold=2, minLineLength=200, maxLineGap=40)
     if lines is not None:
         for line in lines:
             cv.line(ret,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(255,0,0),1)
@@ -65,7 +78,7 @@ def detect_battens(im):
     
 if __name__=='__main__':
     count = 0
-    cap = cv.VideoCapture("./Videos/vid1.mp4")
+    cap = cv.VideoCapture("./Videos/test_vid.mp4")
     if(cap.isOpened() == False):   
         print("Video failed to open")
     pause = False
@@ -73,6 +86,7 @@ if __name__=='__main__':
         if not pause:
             ret, frame = cap.read()
         if(ret):
+            '''
             cv.imshow("Frame",frame)
             stack = detect_stack(frame.copy())
             if len(stack) > 0:
@@ -83,6 +97,9 @@ if __name__=='__main__':
                 resized = cv.resize(stack, dim, interpolation=cv.INTER_AREA)
                 battens = detect_battens(resized.copy())
                 cv.imshow("Battens", battens)
+                '''
+            battens = detect_battens(frame)
+            cv.imshow("Battens", battens)
         else:
             print("Failed to read frame")
             break
@@ -90,7 +107,7 @@ if __name__=='__main__':
         if(key == 27 or key == 113): #esc or q
             break
         elif(key == 115): #s
-            cv.imwrite("Battens"+str(count)+".jpg", battens)
+            cv.imwrite("Frame"+str(count)+".jpg", frame)
             count += 1
         elif(key == 112): #p
             pause = not pause

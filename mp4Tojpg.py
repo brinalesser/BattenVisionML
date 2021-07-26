@@ -4,7 +4,7 @@ import ntpath
 import sys
 import getopt
 
-inputfile = './Videos for ML/vid1.mp4'
+inputfile = './Videos for ML/test_vid.mp4'
 outputfolder = './Images/pos_img'
 
 args = sys.argv[1:]

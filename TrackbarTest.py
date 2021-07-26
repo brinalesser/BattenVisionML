@@ -85,9 +85,9 @@ Trackbar Setup
 '''
 def tb_cb():
     global image
-    #img1 = np.copy(image)
+    img1 = np.copy(image)
     img2 = np.copy(image)
-    #batten_lines(img1)
+    batten_lines(img1)
     batten_bounds(img2)
 
 def tb_cb_l2(val):

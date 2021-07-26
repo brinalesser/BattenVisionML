@@ -28,9 +28,11 @@ cv2.createTrackbar('highS','image',ihighS,255,callback)
 cv2.createTrackbar('lowV','image',ilowV,255,callback)
 cv2.createTrackbar('highV','image',ihighV,255,callback)
 
+pause = False
 while True:
     # grab the frame
-	ret, frame = cap.read()
+	if not pause:
+		ret, frame = cap.read()
     # get trackbar positions
 	ilowH = cv2.getTrackbarPos('lowH', 'image')
 	ihighH = cv2.getTrackbarPos('highH', 'image')
@@ -48,9 +50,16 @@ while True:
 
     # show thresholded image
 	cv2.imshow('image', frame)
-	k = cv2.waitKey(1000) & 0xFF # large wait time to remove freezing
-	if k == 113 or k == 27:
+	key = cv2.waitKey(1000)
+	if(key == 27 or key == 113): #esc or q
 		break
+	elif(key == 115): #s
+		cv2.imwrite("Frame"+str(count)+".jpg", frame)
+		count += 1
+	elif(key == 112): #p
+		pause = not pause
+	elif(key != -1):
+		print(key)
 
  
 cv2.destroyAllWindows()
