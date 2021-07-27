@@ -3,9 +3,9 @@ import numpy as np
 import copy
 import math
 from scipy.optimize import curve_fit
-from matplotlib import pyplot
+from matplotlib import pyplot as plt
 
-MAX_DIST = 10
+MAX_DIST = 50
 
 def get_lines(img):
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -59,6 +59,17 @@ def merge_lines(lines):
     for p in points: #p is a group of points that makes up one line
         x = p[0]
         y = p[1]
+        plt.scatter(x, y)
+        z = np.polyfit(x, y, 1)
+        p = np.poly1d(z)
+        #plt.plot(x,p(x),"r--")
+        #plt.show()
+        lines.append([x, p(x)])
+    for line in lines:
+        plt.plot(line[0],line[1],"r--")
+    plt.show()
+        
+    '''
         n = len(x)
         xy_sum = 0
         xx_sum = 0
@@ -69,13 +80,8 @@ def merge_lines(lines):
         a = (((n*xy_sum) - (sum(x)*sum(y))) / ((n*xx_sum) - pow(sum(x),2)))
         b = ((sum(y) - a*sum(x)) / n)
         lines.append((a, b)) #y = ax + b
-
+        '''
     return lines
-        
-    
-def objective(x, a, b):
-    return a * x + b
-                   
 
 def get_rect(img):
     ret = copy.deepcopy(img)
@@ -108,14 +114,17 @@ if __name__=='__main__':
             im_lines = copy.deepcopy(frame)
             lines = get_lines(im_lines)
             merged_lines = merge_lines(lines)
-            if merged_lines is not None:
-                for line in merged_lines:
-                    cv.line(im_lines,(0,0),(1000, line[0]*1000+line[1]),(255,0,0),1)
+            
+            #if merged_lines is not None:
+                #for line in merged_lines:
+                    #cv.line(im_lines,(0,0),(x, p(x),(255,0,0),1))
+            '''
             cv.imshow("Lines", im_lines)
             im_rect = copy.deepcopy(frame)
             x,y,w,h = get_rect(im_rect)
             cv.rectangle(im_rect, (x, y),(x+w, y+h), (0,0,255), 3)
             cv.imshow("Image",im_rect)
+            '''
         else:
             print("Failed to read frame")
             break
