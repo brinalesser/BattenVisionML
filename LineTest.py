@@ -2,8 +2,8 @@ import cv2 as cv
 import numpy as np
 import copy
 import math
-from scipy.optimize import curve_fit
 from matplotlib import pyplot as plt
+from statistics import mean
 
 MAX_DIST = 50
 
@@ -65,22 +65,8 @@ def merge_lines(lines):
         #plt.plot(x,p(x),"r--")
         #plt.show()
         lines.append([x, p(x)])
-    for line in lines:
-        plt.plot(line[0],line[1],"r--")
-    plt.show()
-        
-    '''
-        n = len(x)
-        xy_sum = 0
-        xx_sum = 0
-        for i in range(n):
-            xy_sum += x[i] * y[i]
-            xx_sum += x[i] ** 2
-            
-        a = (((n*xy_sum) - (sum(x)*sum(y))) / ((n*xx_sum) - pow(sum(x),2)))
-        b = ((sum(y) - a*sum(x)) / n)
-        lines.append((a, b)) #y = ax + b
-        '''
+        #m = (((mean(x)*mean(y)) - mean(x*y)) / ((mean(x)*mean(x)) - mean(x*x)))
+
     return lines
 
 def get_rect(img):
@@ -107,6 +93,7 @@ if __name__=='__main__':
     if(cap.isOpened() == False):   
         print("Video failed to open")
     pause = False
+    ret = False
     while(cap.isOpened()):
         if not pause:
             ret, frame = cap.read()
@@ -114,12 +101,11 @@ if __name__=='__main__':
             im_lines = copy.deepcopy(frame)
             lines = get_lines(im_lines)
             merged_lines = merge_lines(lines)
-            
-            #if merged_lines is not None:
-                #for line in merged_lines:
-                    #cv.line(im_lines,(0,0),(x, p(x),(255,0,0),1))
+            for line in merged_lines:
+                plt.plot(line[0],line[1],"r--")
+            plt.imshow(im_lines)
+            plt.show()
             '''
-            cv.imshow("Lines", im_lines)
             im_rect = copy.deepcopy(frame)
             x,y,w,h = get_rect(im_rect)
             cv.rectangle(im_rect, (x, y),(x+w, y+h), (0,0,255), 3)
