@@ -98,13 +98,20 @@ if __name__=='__main__':
         if not pause:
             ret, frame = cap.read()
         if(ret):
+            
             im_lines = copy.deepcopy(frame)
             lines = get_lines(im_lines)
             merged_lines = merge_lines(lines)
             for line in merged_lines:
-                plt.plot(line[0],line[1],"r--")
-            plt.imshow(im_lines)
-            plt.show()
+                #plt.plot(line[0],line[1], "r-")
+                #print(line[0])
+                #print(line[1])
+                x1 = int(line[0][0])
+                x2 = int(line[0][-1])
+                y1 = int(line[1][0])
+                y2 = int(line[1][-1])
+                cv.line(im_lines,(x1,y1),(x2,y2),(255,0,0),2)
+            cv.imshow("Lines",im_lines)
             '''
             im_rect = copy.deepcopy(frame)
             x,y,w,h = get_rect(im_rect)
