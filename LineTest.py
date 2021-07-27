@@ -107,7 +107,7 @@ def get_rect(img):
 if __name__=='__main__':
 
     count = 0
-    cap = cv.VideoCapture("./Videos/test_vid.mp4")
+    cap = cv.VideoCapture("./Videos/test.mp4")
     if(cap.isOpened() == False):   
         print("Video failed to open")
     pause = False
