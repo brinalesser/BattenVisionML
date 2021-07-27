@@ -1,22 +1,35 @@
+'''
+This program identifies the 1/8th inch gaps between battens
+
+@author: Sabrina Lesser (Sabrina.Lesser@rfpco.com)
+@date last modified: 7/27/21
+'''
+
 import cv2 as cv
 import numpy as np
 import copy
 import math
 from matplotlib import pyplot as plt
-from statistics import mean
 
 MAX_DIST = 50
 
+'''
+Get the lines indicating the gap from edge detection
+@param img a close up to a frame of battens
+@return the lines along the battens
+'''
 def get_lines(img):
+    #convert to grayscale and blur
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-
     blur1 = cv.medianBlur(gray, 5)
     blur2 = cv.bilateralFilter(blur1, 7, 75, 75)
+    #find the edges
     edges = cv.Canny(image=blur2, threshold1=0, threshold2=255, apertureSize=3, L2gradient=False)
-        
+    #find the lines
     return cv.HoughLinesP(edges, 1, np.pi/180, 1, MAX_DIST, 1)
     
 def merge_lines(lines):
+    #get the midpoints for each of the lines
     midpoints = []
     if lines is not None:
         for line in lines:
@@ -25,6 +38,7 @@ def merge_lines(lines):
       
     points = []
     groups = []
+    #merge the midpoints into groups to combine into lines
     for p1 in midpoints:
         x1 = p1[0]
         y1 = p1[1]
@@ -59,31 +73,35 @@ def merge_lines(lines):
     for p in points: #p is a group of points that makes up one line
         x = p[0]
         y = p[1]
-        plt.scatter(x, y)
+        #scatterplot and lines of best fit
         z = np.polyfit(x, y, 1)
         p = np.poly1d(z)
-        #plt.plot(x,p(x),"r--")
-        #plt.show()
         lines.append([x, p(x)])
-        #m = (((mean(x)*mean(y)) - mean(x*y)) / ((mean(x)*mean(x)) - mean(x*x)))
 
     return lines
 
+'''
+Used to determine gap when frame is not close up
+@param img a frame of battens
+@return a bounding rectangle around the gap
+'''
 def get_rect(img):
+    #convert to hsv
     ret = copy.deepcopy(img)
     hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
-    
+    #filter out colors
     lower_hsv = np.array([0, 0, 110])
     higher_hsv = np.array([180, 110, 210])
     mask = cv.inRange(hsv, lower_hsv, higher_hsv)
-    
+    #blur and edge detect
     blur1 = cv.medianBlur(mask, 5)
     blur2 = cv.bilateralFilter(blur1, 7, 75, 75)
     edges = cv.Canny(image=blur2, threshold1=0, threshold2=45, apertureSize=3, L2gradient=False)
-
+    #find contours
     contours, hierarchy = cv.findContours(edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     areas = [cv.contourArea(c) for c in contours]   
-    idx = np.argmax(areas)
+    idx = np.argmax(areas) #contour with largest area
+    #return bounding rectangle around contour with largest area
     return cv.boundingRect(contours[idx])
 
 if __name__=='__main__':
@@ -98,14 +116,13 @@ if __name__=='__main__':
         if not pause:
             ret, frame = cap.read()
         if(ret):
-            
+            #get batten lines
             im_lines = copy.deepcopy(frame)
             lines = get_lines(im_lines)
+            #merge lines
             merged_lines = merge_lines(lines)
+            #draw lines
             for line in merged_lines:
-                #plt.plot(line[0],line[1], "r-")
-                #print(line[0])
-                #print(line[1])
                 x1 = int(line[0][0])
                 x2 = int(line[0][-1])
                 y1 = int(line[1][0])
@@ -113,6 +130,7 @@ if __name__=='__main__':
                 cv.line(im_lines,(x1,y1),(x2,y2),(255,0,0),2)
             cv.imshow("Lines",im_lines)
             '''
+            #find bounding recangle around gap when frame is not close to battens
             im_rect = copy.deepcopy(frame)
             x,y,w,h = get_rect(im_rect)
             cv.rectangle(im_rect, (x, y),(x+w, y+h), (0,0,255), 3)
@@ -121,6 +139,7 @@ if __name__=='__main__':
         else:
             print("Failed to read frame")
             break
+        #control keys
         key = cv.waitKey(1)
         if(key == 27 or key == 113): #esc or q
             break
