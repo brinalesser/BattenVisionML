@@ -7,6 +7,7 @@ Various vision processing programs using OpenCV and python3 on a Raspberry Pi wi
 ## File Structure
 
 ### Top Level
+```
 .
 ├── Images                      # Images of battens to test code with
 ├── Old                         # Badly documented older code used for quick tests
@@ -31,3 +32,4 @@ Various vision processing programs using OpenCV and python3 on a Raspberry Pi wi
 ├── README.md
 ├── TrackbarTest.py             # Show the effect of different values on edge detection
 └── mp4Tojpg.py                 # Used to save screenshots from video as jpgs
+```
