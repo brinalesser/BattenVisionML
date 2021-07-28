@@ -48,15 +48,10 @@ if __name__=='__main__':
     #command line arguments
     parser = argparse.ArgumentParser(description='Test to detect wood using color')
     parser.add_argument('-v', help='Video file', default=0, type=str)
-    parser.add_argument('-c', help='Camera', action='store_true')
     args = parser.parse_args()
 
     #open video
-    if(args.c):
-        vid = 0
-    else:
-        vid = args.v
-    cap = cv.VideoCapture(vid)
+    cap = cv.VideoCapture(args.v)
     if(cap.isOpened() == False):
         print("Video failed to open")
 

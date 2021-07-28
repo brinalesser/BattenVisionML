@@ -7,26 +7,23 @@ import numpy as np
 def callback(x):
 	pass
 
-cap = cv2.VideoCapture('./Videos/test_vid.mp4')
-cv2.namedWindow('image')
+cap = cv2.VideoCapture(0)
+cv2.namedWindow('trackbars')
 
 ilowH = 0
 ihighH = 179
-
 ilowS = 0
 ihighS = 255
 ilowV = 0
 ihighV = 255
 
 # create trackbars for color change
-cv2.createTrackbar('lowH','image',ilowH,179,callback)
-cv2.createTrackbar('highH','image',ihighH,179,callback)
-
-cv2.createTrackbar('lowS','image',ilowS,255,callback)
-cv2.createTrackbar('highS','image',ihighS,255,callback)
-
-cv2.createTrackbar('lowV','image',ilowV,255,callback)
-cv2.createTrackbar('highV','image',ihighV,255,callback)
+cv2.createTrackbar('lowH','trackbars',ilowH,179,callback)
+cv2.createTrackbar('highH','trackbars',ihighH,179,callback)
+cv2.createTrackbar('lowS','trackbars',ilowS,255,callback)
+cv2.createTrackbar('highS','trackbars',ihighS,255,callback)
+cv2.createTrackbar('lowV','trackbars',ilowV,255,callback)
+cv2.createTrackbar('highV','trackbars',ihighV,255,callback)
 
 pause = False
 while True:
@@ -34,12 +31,12 @@ while True:
 	if not pause:
 		ret, frame = cap.read()
     # get trackbar positions
-	ilowH = cv2.getTrackbarPos('lowH', 'image')
-	ihighH = cv2.getTrackbarPos('highH', 'image')
-	ilowS = cv2.getTrackbarPos('lowS', 'image')
-	ihighS = cv2.getTrackbarPos('highS', 'image')
-	ilowV = cv2.getTrackbarPos('lowV', 'image')
-	ihighV = cv2.getTrackbarPos('highV', 'image')
+	ilowH = cv2.getTrackbarPos('lowH', 'trackbars')
+	ihighH = cv2.getTrackbarPos('highH', 'trackbars')
+	ilowS = cv2.getTrackbarPos('lowS', 'trackbars')
+	ihighS = cv2.getTrackbarPos('highS', 'trackbars')
+	ilowV = cv2.getTrackbarPos('lowV', 'trackbars')
+	ihighV = cv2.getTrackbarPos('highV', 'trackbars')
 
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 	lower_hsv = np.array([ilowH, ilowS, ilowV])
