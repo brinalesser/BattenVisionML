@@ -1,5 +1,14 @@
 '''
-This program tests different ways to do edge detection on images
+This program tests different ways to do feature and edge detection on images
+
+Command Line (-m [N]) Options for different detection methods:
+N =
+0: Shows Hough Lines
+1: Shows Harris Corner Detection
+2: Shows contours
+3: Shows goodFeaturesToTrack Feature Detection
+4: Shows ORB (Oriented FAST and Rotated BRIEF) Feature Detection
+5: Shows FAST Feature Detection
 
 @author: Sabrina Lesser (Sabrina.Lesser@rfpco.com)
 @date last modified: 7/27/21
