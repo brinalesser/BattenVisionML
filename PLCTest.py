@@ -60,18 +60,25 @@ Detect the objects within the region of interest
 '''
 def detect_obj(im):
     locations = [] #return value
+    
+    ##using HSV##
+    #convert to hsv
     hsv = cv.cvtColor(im, cv.COLOR_BGR2HSV)
+    #filter out colors not in range
     lows = np.array([h_low, s_low, v_low])
     highs = np.array([h_high, s_high, v_high])
     mask = cv.inRange(hsv, lows, highs)
     im = cv.bitwise_and(im, im, mask=mask)
+    #convert to grayscale and find contours
     gray = cv.cvtColor(im, cv.COLOR_BGR2GRAY)
     contours, hierarchy = cv.findContours(gray, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    #if the area of the contour is large enough, find the bounding rectangle and add it to the return list
     for contour in contours:
         area = cv.contourArea(contour)
-        if(area > 20):
+        if(area > 20): #this prevents small noise from being confused for the object
             locations.append(cv.boundingRect(contour))
     '''
+    ##using dominant color##
     #convert to grayscale and blur the image
     gray = cv.cvtColor(im, cv.COLOR_BGR2GRAY)
     blur = cv.medianBlur(gray, 5)
@@ -143,9 +150,12 @@ if __name__=='__main__':
             print("failed to read frame")
             break
         else:
+            #find the region of interest (the paper) and display it
             bounds = detect_background(frame)
             cv.imshow("Frame", frame)
+            #get the shape of the ROI
             dim = bounds.shape
+            #find the bounding rectangles for the objects
             rects = detect_obj(bounds)
             if(use_plc):
                 leds = comm.Write('OUTPUT_LEDS',0)
