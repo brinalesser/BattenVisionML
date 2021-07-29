@@ -28,7 +28,13 @@ def get_lines(img):
     #find the lines
     return cv.HoughLinesP(edges, 1, np.pi/180, 1, MAX_DIST, 1)
     
-def merge_lines(lines):
+'''
+Merge small lines to form one line  where the gap is
+@param lines the small lines
+@param img the frame image
+@return the lines indicating the gap
+'''
+def merge_lines(lines, img):
     #get the midpoints for each of the lines
     midpoints = []
     if lines is not None:
@@ -70,14 +76,16 @@ def merge_lines(lines):
         
     #draw lines
     lines = []
+    plt.imshow(img)
     for p in points: #p is a group of points that makes up one line
         x = p[0]
         y = p[1]
         #scatterplot and lines of best fit
         z = np.polyfit(x, y, 1)
-        p = np.poly1d(z)
-        lines.append([x, p(x)])
-
+        fn = np.poly1d(z)
+        lines.append([x, fn(x)])
+        plt.plot(x,fn(x),color='orange')
+    plt.show()
     return lines
 
 '''
@@ -117,18 +125,17 @@ if __name__=='__main__':
             ret, frame = cap.read()
         if(ret):
             #get batten lines
-            im_lines = copy.deepcopy(frame)
-            lines = get_lines(im_lines)
+            lines = get_lines(frame)
             #merge lines
-            merged_lines = merge_lines(lines)
+            merged_lines = merge_lines(lines, frame)
             #draw lines
             for line in merged_lines:
                 x1 = int(line[0][0])
                 x2 = int(line[0][-1])
                 y1 = int(line[1][0])
                 y2 = int(line[1][-1])
-                cv.line(im_lines,(x1,y1),(x2,y2),(255,0,0),2)
-            cv.imshow("Lines",im_lines)
+                cv.line(frame,(x1,y1),(x2,y2),(255,0,0),2)
+            #cv.imshow("Lines",im_lines)
             '''
             #find bounding recangle around gap when frame is not close to battens
             im_rect = copy.deepcopy(frame)

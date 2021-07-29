@@ -157,12 +157,13 @@ if __name__=='__main__':
             dim = bounds.shape
             #find the bounding rectangles for the objects
             rects = detect_obj(bounds)
-            if(use_plc):
-                leds = comm.Write('OUTPUT_LEDS',0)
-                if(leds.Status is not 'Success'):
-                    print('Failed to write to LED tag')
-                    use_plc = False
+            #draw grid
+            bounds = cv.line(bounds, (int(dim[1]*0.5),0), (int(dim[1]*0.5),dim[0]), (255,0,0), 1)
+            for i in range(8):
+                bounds = cv.line(bounds, (0,int(dim[0]*i*0.125)), (dim[1],int(dim[0]*i*0.125)), (255,0,0), 1)
+            grid_locations = []
             for rect in rects:
+                #draw rectangle around object and center point
                 x1 = rect[0]
                 x2 = rect[0] + rect[2]
                 y1 = rect[1]
@@ -170,45 +171,54 @@ if __name__=='__main__':
                 center = (int((x1+x2)/2), int((y1+y2)/2))
                 bounds = cv.rectangle(bounds, (x1,y1), (x2,y2), (0,255,0), 2)
                 bounds = cv.circle(bounds, (center[0],center[1]), 2, (0,0,255), -1)
+                #find location on grid
                 if(use_plc):
                     if(center[0] < dim[1]*0.5):
                         if(center[1] < dim[0]*0.125):
-                            grid_location = 0
+                            grid_locations.append(0)
                         elif(center[1] < dim[0]*0.25):
-                            grid_location = 1
+                            grid_locations.append(1)
                         elif(center[1] < dim[0]*0.375):
-                            grid_location = 2
+                            grid_locations.append(2)
                         elif(center[1] < dim[0]*0.5):
-                            grid_location = 3
+                            grid_locations.append(3)
                         elif(center[1] < dim[0]*0.625):
-                            grid_location = 4
+                            grid_locations.append(4)
                         elif(center[1] < dim[0]*0.75):
-                            grid_location = 5
+                            grid_locations.append(5)
                         elif(center[1] < dim[0]*0.875):
-                            grid_location = 6
+                            grid_locations.append(6)
                         else:
-                            grid_location = 7
+                            grid_locations.append(7)
                     else:
                         if(center[1] < dim[0]*0.125):
-                            grid_location = 8
+                            grid_locations.append(8)
                         elif(center[1] < dim[0]*0.25):
-                            grid_location = 9
+                            grid_locations.append(9)
                         elif(center[1] < dim[0]*0.375):
-                            grid_location = 10
+                            grid_locations.append(10)
                         elif(center[1] < dim[0]*0.5):
-                            grid_location = 11
+                            grid_locations.append(11)
                         elif(center[1] < dim[0]*0.625):
-                            grid_location = 12
+                            grid_locations.append(12)
                         elif(center[1] < dim[0]*0.75):
-                            grid_location = 13
+                            grid_locations.append(13)
                         elif(center[1] < dim[0]*0.875):
-                            grid_location = 14
+                            grid_locations.append(14)
                         else:
-                            grid_location = 15
-                    leds = comm.Write('OUTPUT_LEDS', (leds.Value[0] | (1 << grid_location)))
-                    if(leds.Status is not 'Success'):
-                        print('Failed to write to LED tag')
-                        use_plc = False
+                            grid_locations.append(15)
+            #write new value to PLC
+            if(use_plc):
+                if (len(grid_locations) > 0):
+                    val = 0
+                    for loc in grid_locations:
+                        val = val | (1 << loc)
+                    leds = comm.Write('OUTPUT_LEDS', val)
+                else:
+                    leds = comm.Write('OUTPUT_LEDS', 0)
+                if(leds.Status is not 'Success'):
+                    print('Failed to write to LED tag')
+                    use_plc = False
             cv.imshow("Object", bounds)
             
             key = cv.waitKey(1)
