@@ -23,6 +23,7 @@ Various vision processing programs using OpenCV and python3 on a Raspberry Pi wi
 ├── ColorTuneBGR.py             # Used to find the BGR color values for an object
 ├── ColorTuneHSV.py             # Used to find the HSV color values in a frame
 ├── DetectionMethodsTest.py     # Tests different OpenCV feature and edge detection methods
+├── LineMergeTest.py            # An attempt to make edge lines steadier
 ├── LineTest.py                 # Identifies the location of the gap between battens on close up frames
 ├── ObjectDetectTest.py         # Object detection using Cascade Classifier
                                   - was unable to create a good enough model for the the battens to be accurately identified
