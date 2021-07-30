@@ -29,6 +29,15 @@ s_high = 60
 v_low = 245
 v_high = 255
 
+PIXEL_WIDTH_PER_PAGE = 200
+PIXEL_HEIGHT_PER_PAGE = 275
+PAGE_WIDTH = 11
+PAGE_HEIGHT = 17
+ROBOT_X_OFFSET = 0
+ROBOT_X_INCREMENT = PIXEL_WIDTH_PER_PAGE / PAGE_WIDTH
+ROBOT_Y_OFFSET = 0
+ROBOT_Y_INCREMENT = PIXEL_HEIGHT_PER_PAGE / PAGE_HEIGHT
+
 '''
 Narrows the frame to the paper that the pencils are on
 
@@ -50,7 +59,7 @@ def detect_background(im):
     #find the bounding rectangle, draw it, then return only the portion of the frame with the paper
     x,y,w,h = cv.boundingRect(contours[idx])
     im = cv.rectangle(im, (x,y), (x+w,y+h), (255,0,0), 3)
-    return im[y:y+h,x:x+w] 
+    return ((x,y), im[y:y+h,x:x+w])
 
 '''
 Detect the objects within the region of interest
@@ -108,6 +117,54 @@ def detect_obj(im):
             locations.append([x,y,w,h])
     '''
     return locations
+
+'''
+Gets the grid location on a 2x8 grid and the location on a 11x17 sheet of paper
+given the center point of the object and the height and width of the frame
+
+@param point the center point of the object
+@param height the height of the frame
+@param width the width of the frame
+@return the grid location on a 2x8 grid, the x and y position on a sheet of paper in inches
+'''
+def get_grid_location(point, height, width):
+    x = ROBOT_X_OFFSET + (point[0] / ROBOT_X_INCREMENT)
+    y = ROBOT_Y_OFFSET + (point[1] / ROBOT_Y_INCREMENT)
+    if(point[0] < width*0.5):
+        if(point[1] < height*0.125):
+            return (0, (x,y))
+        elif(point[1] < height*0.25):
+            return (1, (x,y))
+        elif(point[1] < height*0.375):
+            return (2, (x,y))
+        elif(point[1] < height*0.5):
+            return (3, (x,y))
+        elif(point[1] < height*0.625):
+            return (4, (x,y))
+        elif(point[1] < height*0.75):
+            return (5, (x,y))
+        elif(point[1] < height*0.875):
+            return (6, (x,y))
+        else:
+            return (7, (x,y))
+    else:
+        if(center[1] < height*0.125):
+            return (8, (x,y))
+        elif(center[1] < height*0.25):
+            return (9, (x,y))
+        elif(center[1] < height*0.375):
+            return (10, (x,y))
+        elif(center[1] < height*0.5):
+            return (11, (x,y))
+        elif(center[1] < height*0.625):
+            return (12, (x,y))
+        elif(center[1] < height*0.75):
+            return (13, (x,y))
+        elif(center[1] < height*0.875):
+            return (14, (x,y))
+        else:
+            return (15, (x,y))
+
 '''
 
 Main
@@ -151,75 +208,37 @@ if __name__=='__main__':
             break
         else:
             #find the region of interest (the paper) and display it
-            bounds = detect_background(frame)
-            cv.imshow("Frame", frame)
+            ((x_offset, y_offset), bounds) = detect_background(frame)
             #get the shape of the ROI
             dim = bounds.shape
             #find the bounding rectangles for the objects
             rects = detect_obj(bounds)
             #draw grid
-            bounds = cv.line(bounds, (int(dim[1]*0.5),0), (int(dim[1]*0.5),dim[0]), (255,0,0), 1)
+            frame = cv.line(frame, (x_offset+int(dim[1]*0.5),y_offset), (x_offset+int(dim[1]*0.5),y_offset+dim[0]), (255,0,0), 1)
             for i in range(8):
-                bounds = cv.line(bounds, (0,int(dim[0]*i*0.125)), (dim[1],int(dim[0]*i*0.125)), (255,0,0), 1)
-            grid_locations = []
+                frame = cv.line(frame, (x_offset,y_offset+int(dim[0]*i*0.125)), (x_offset+dim[1],y_offset+int(dim[0]*i*0.125)), (255,0,0), 1)
+            #process locations of objects
+            write_val = 0
             for rect in rects:
-                #draw rectangle around object and center point
                 x1 = rect[0]
-                x2 = rect[0] + rect[2]
+                x2 = rect[0]+rect[2]
                 y1 = rect[1]
-                y2 = rect[1] + rect[3]
+                y2 = rect[1]+rect[3]
                 center = (int((x1+x2)/2), int((y1+y2)/2))
-                bounds = cv.rectangle(bounds, (x1,y1), (x2,y2), (0,255,0), 2)
-                bounds = cv.circle(bounds, (center[0],center[1]), 2, (0,0,255), -1)
-                #find location on grid
-                if(use_plc):
-                    if(center[0] < dim[1]*0.5):
-                        if(center[1] < dim[0]*0.125):
-                            grid_locations.append(0)
-                        elif(center[1] < dim[0]*0.25):
-                            grid_locations.append(1)
-                        elif(center[1] < dim[0]*0.375):
-                            grid_locations.append(2)
-                        elif(center[1] < dim[0]*0.5):
-                            grid_locations.append(3)
-                        elif(center[1] < dim[0]*0.625):
-                            grid_locations.append(4)
-                        elif(center[1] < dim[0]*0.75):
-                            grid_locations.append(5)
-                        elif(center[1] < dim[0]*0.875):
-                            grid_locations.append(6)
-                        else:
-                            grid_locations.append(7)
-                    else:
-                        if(center[1] < dim[0]*0.125):
-                            grid_locations.append(8)
-                        elif(center[1] < dim[0]*0.25):
-                            grid_locations.append(9)
-                        elif(center[1] < dim[0]*0.375):
-                            grid_locations.append(10)
-                        elif(center[1] < dim[0]*0.5):
-                            grid_locations.append(11)
-                        elif(center[1] < dim[0]*0.625):
-                            grid_locations.append(12)
-                        elif(center[1] < dim[0]*0.75):
-                            grid_locations.append(13)
-                        elif(center[1] < dim[0]*0.875):
-                            grid_locations.append(14)
-                        else:
-                            grid_locations.append(15)
+                #get location on grid
+                (grid, (x,y)) = get_grid_location(center, dim[0], dim[1])
+                #draw on frame
+                frame = cv.rectangle(frame, (x_offset+x1,y_offset+y1), (x_offset+x2,y_offset+y2), (0,255,0), 2) #bounding rectangle for object
+                frame = cv.circle(frame, (x_offset+center[0],y_offset+center[1]), 2, (0,0,255), -1) #center point of object
+                frame = cv.putText(frame, (" ("+str(round(x, 2))+","+str(round(y, 2))+")"), (x_offset+center[0], y_offset+center[1]), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255),1) #location of object
+                write_val = write_val | (1 << grid) #update value to write to PLC
             #write new value to PLC
             if(use_plc):
-                if (len(grid_locations) > 0):
-                    val = 0
-                    for loc in grid_locations:
-                        val = val | (1 << loc)
-                    leds = comm.Write('OUTPUT_LEDS', val)
-                else:
-                    leds = comm.Write('OUTPUT_LEDS', 0)
+                leds = comm.Write('OUTPUT_LEDS', write_val)
                 if(leds.Status is not 'Success'):
                     print('Failed to write to LED tag')
                     use_plc = False
-            cv.imshow("Object", bounds)
+            cv.imshow("Image", frame)
             
             key = cv.waitKey(1)
             if(key == 27 or key == 113): #esc or q
