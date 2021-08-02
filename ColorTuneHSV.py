@@ -23,7 +23,7 @@ parser.add_argument('-v', help='Video file name. Default is Raspberry Pi USB cam
 args = parser.parse_args()
 
 #Open video
-cap = cv.VideoCapture(args.v)
+cap = cv2.VideoCapture(args.v)
 
 #Create separate window for trackbars
 cv2.namedWindow('trackbars')

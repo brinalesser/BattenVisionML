@@ -1,10 +1,7 @@
 '''
-
 This is a program to test interacting with a PLC using python
-
 @author Sabrina Lesser (Sabrina.Lesser@rfpco.com)
 @date last modified:7/28/21
-
 '''
 from pylogix import PLC
 from struct import pack, unpack_from
@@ -40,7 +37,6 @@ ROBOT_Y_INCREMENT = PIXEL_HEIGHT_PER_PAGE / PAGE_HEIGHT
 
 '''
 Narrows the frame to the paper that the pencils are on
-
 @param im the frame
 @return only the part of the frame that contains the paper
 '''
@@ -63,7 +59,6 @@ def detect_background(im):
 
 '''
 Detect the objects within the region of interest
-
 @param im the frame only containing the paper
 @return a list of bounding rectangles around the objects
 '''
@@ -95,7 +90,6 @@ def detect_obj(im):
     #find edges contours
     edges = cv.Canny(image=thresh, threshold1=0, threshold2=255)
     contours, hierarchy = cv.findContours(edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-
     #check which contours are around the desired object
     for contour in contours:
         x,y,w,h = cv.boundingRect(contour)
@@ -121,7 +115,6 @@ def detect_obj(im):
 '''
 Gets the grid location on a 2x8 grid and the location on a 11x17 sheet of paper
 given the center point of the object and the height and width of the frame
-
 @param point the center point of the object
 @param height the height of the frame
 @param width the width of the frame
@@ -166,9 +159,7 @@ def get_grid_location(point, height, width):
             return (15, (x,y))
 
 '''
-
 Main
-
 '''
 if __name__=='__main__':
     #command line arguments
@@ -258,5 +249,3 @@ if __name__=='__main__':
     #it will eventually flush the connection, after about 90 seconds
     if(use_plc):
         comm.Close()
-    
-

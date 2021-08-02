@@ -1,0 +1,3 @@
+/home/pi/Desktop/CProjects/CVTest/CMakeFiles/rebuild_cache.dir
+/home/pi/Desktop/CProjects/CVTest/CMakeFiles/image_filter.dir
+/home/pi/Desktop/CProjects/CVTest/CMakeFiles/edit_cache.dir
