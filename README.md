@@ -9,11 +9,11 @@ Various vision processing programs using OpenCV and python3 on a Raspberry Pi wi
 ### Top Level
 ```
 .
+├── CTest                       # C++ code for vision processing using
 ├── Images                      # Images of battens to test code with
 ├── Old                         # Badly documented older code used for quick tests
                                   - left for reference
 ├── Videos                      # Videos of battens to test code with
-
 ├── BackgroundRemovalTest.py    # Removes a settable background from a video 
                                   - good for stationary camera with unchanging background, changing foreground
 ├── BattenTest.py               # Attempts to use color filtering + Canny edge detection + contours to detect a stack of battens then identify edges of individual battens
@@ -23,7 +23,10 @@ Various vision processing programs using OpenCV and python3 on a Raspberry Pi wi
 ├── ColorTuneBGR.py             # Used to find the BGR color values for an object
 ├── ColorTuneHSV.py             # Used to find the HSV color values in a frame
 ├── DetectionMethodsTest.py     # Tests different OpenCV feature and edge detection methods
+├── ImageFilter                 # An attempt to process frames pixel by pixel
+                                  - too slow using python: see CTest code instead
 ├── LineMergeTest.py            # An attempt to make edge lines steadier
+                                  - slow: see LineTest.py instead
 ├── LineTest.py                 # Identifies the location of the gap between battens on close up frames
 ├── ObjectDetectTest.py         # Object detection using Cascade Classifier
                                   - was unable to create a good enough model for the the battens to be accurately identified
