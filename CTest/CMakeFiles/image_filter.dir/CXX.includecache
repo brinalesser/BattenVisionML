@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/pi/Desktop/CProjects/CVTest/src/ImageFilter.cpp
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/src/ImageFilter.cpp
 ImageFilter.h
-/home/pi/Desktop/CProjects/CVTest/src/ImageFilter.h
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/src/ImageFilter.h
 
 include/ImageFilter.h
 opencv2/opencv.hpp

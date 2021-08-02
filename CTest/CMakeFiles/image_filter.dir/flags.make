@@ -6,5 +6,5 @@ CXX_FLAGS =
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/pi/Desktop/CProjects/CVTest/include -isystem /usr/include/opencv 
+CXX_INCLUDES = -I/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/include -isystem /usr/include/opencv 
 
