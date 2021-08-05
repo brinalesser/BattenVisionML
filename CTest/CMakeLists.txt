@@ -6,8 +6,8 @@ find_package(OpenCV REQUIRED)
 include_directories(include)
 
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/include )
-link_directories( ${CMAKE_BINARY_DIR}/bin_dist)
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin_dist)
+link_directories( ${CMAKE_BINARY_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
 set(IMAGE_FILTER_SRC src/ImageFilter.cpp)
 set(PLC_COMM_SRC src/PLCCommTest.cpp)

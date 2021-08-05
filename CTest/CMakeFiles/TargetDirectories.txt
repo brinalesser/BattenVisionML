@@ -1,3 +1,0 @@
-/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/CMakeFiles/rebuild_cache.dir
-/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/CMakeFiles/plc_comm_test.dir
-/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/CMakeFiles/edit_cache.dir
