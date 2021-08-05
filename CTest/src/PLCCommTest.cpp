@@ -1,8 +1,6 @@
 
 #include "PLCCommTest.h"
 
-#include <libplctag.h>
-
 int main()
 {
     int32_t tag = 0;

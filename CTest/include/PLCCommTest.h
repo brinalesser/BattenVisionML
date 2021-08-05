@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <strings.h>
 #include <stdint.h>
-#include "libplctag.h"
+#include <libplctag.h>
 
 #define snprintf_platform snprintf
 #define sscanf_platform sscanf
