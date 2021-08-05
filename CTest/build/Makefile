@@ -51,7 +51,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/pi/Desktop/PythonProjects/BattenVisionML/CTest
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/pi/Desktop/PythonProjects/BattenVisionML/CTest
+CMAKE_BINARY_DIR = /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/CMakeFiles /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -123,6 +123,19 @@ image_filter/fast:
 	$(MAKE) -f CMakeFiles/image_filter.dir/build.make CMakeFiles/image_filter.dir/build
 .PHONY : image_filter/fast
 
+#=============================================================================
+# Target rules for targets named plc_comm_test
+
+# Build rule for target.
+plc_comm_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 plc_comm_test
+.PHONY : plc_comm_test
+
+# fast build rule for target.
+plc_comm_test/fast:
+	$(MAKE) -f CMakeFiles/plc_comm_test.dir/build.make CMakeFiles/plc_comm_test.dir/build
+.PHONY : plc_comm_test/fast
+
 src/ImageFilter.o: src/ImageFilter.cpp.o
 
 .PHONY : src/ImageFilter.o
@@ -150,6 +163,33 @@ src/ImageFilter.cpp.s:
 	$(MAKE) -f CMakeFiles/image_filter.dir/build.make CMakeFiles/image_filter.dir/src/ImageFilter.cpp.s
 .PHONY : src/ImageFilter.cpp.s
 
+src/PLCCommTest.o: src/PLCCommTest.cpp.o
+
+.PHONY : src/PLCCommTest.o
+
+# target to build an object file
+src/PLCCommTest.cpp.o:
+	$(MAKE) -f CMakeFiles/plc_comm_test.dir/build.make CMakeFiles/plc_comm_test.dir/src/PLCCommTest.cpp.o
+.PHONY : src/PLCCommTest.cpp.o
+
+src/PLCCommTest.i: src/PLCCommTest.cpp.i
+
+.PHONY : src/PLCCommTest.i
+
+# target to preprocess a source file
+src/PLCCommTest.cpp.i:
+	$(MAKE) -f CMakeFiles/plc_comm_test.dir/build.make CMakeFiles/plc_comm_test.dir/src/PLCCommTest.cpp.i
+.PHONY : src/PLCCommTest.cpp.i
+
+src/PLCCommTest.s: src/PLCCommTest.cpp.s
+
+.PHONY : src/PLCCommTest.s
+
+# target to generate assembly for a file
+src/PLCCommTest.cpp.s:
+	$(MAKE) -f CMakeFiles/plc_comm_test.dir/build.make CMakeFiles/plc_comm_test.dir/src/PLCCommTest.cpp.s
+.PHONY : src/PLCCommTest.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -159,9 +199,13 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... image_filter"
 	@echo "... edit_cache"
+	@echo "... plc_comm_test"
 	@echo "... src/ImageFilter.o"
 	@echo "... src/ImageFilter.i"
 	@echo "... src/ImageFilter.s"
+	@echo "... src/PLCCommTest.o"
+	@echo "... src/PLCCommTest.i"
+	@echo "... src/PLCCommTest.s"
 .PHONY : help
 
 

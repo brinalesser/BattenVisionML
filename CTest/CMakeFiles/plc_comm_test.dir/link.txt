@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/plc_comm_test.dir/src/PLCCommTest.cpp.o  -o bin/plc_comm_test   -L/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/bin  -Wl,-rpath,/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/bin -Llibplctag/bin_dist 

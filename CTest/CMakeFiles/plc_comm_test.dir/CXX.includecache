@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/src/PLCCommTest.cpp
+PLCCommTest.h
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/src/PLCCommTest.h
+libplctag/src/examples/utils.h
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/src/libplctag/src/examples/utils.h
+libplctag/src/lib/libplctag.h
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/src/libplctag/src/lib/libplctag.h
+
+include/PLCCommTest.h
+stdio.h
+-
+stdlib.h
+-
+
