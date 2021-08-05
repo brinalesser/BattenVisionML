@@ -6,7 +6,6 @@ Various vision processing programs using OpenCV and python3 on a Raspberry Pi wi
 
 ## File Structure
 
-### Top Level
 ```
 .
 ├── CTest                       # C++ code for vision processing
@@ -19,10 +18,14 @@ Various vision processing programs using OpenCV and python3 on a Raspberry Pi wi
 │   │   ├── ImageFilter.cpp     #c++ program to process an image from the raspberry pi usb camera pixel by pixel
 │   │   ├── PLCCommTest.cpp     #c++ program to communicate with the PLC
 │   ├── CMakeLists.txt          #Cmake file
+│   ├── README.md               # Details on using libplctag library
+
 ├── Images                      # Images of battens to test code with
+
 ├── Old                         # Badly documented older code used for quick tests
                                   - left for reference
 ├── Videos                      # Videos of battens to test code with
+
 ├── BackgroundRemovalTest.py    # Removes a settable background from a video 
                                   - good for stationary camera with unchanging background, changing foreground
 ├── BattenTest.py               # Attempts to use color filtering + Canny edge detection + contours to detect a stack of battens then identify edges of individual battens
