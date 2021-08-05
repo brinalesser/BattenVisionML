@@ -22,9 +22,7 @@ Various vision processing programs using OpenCV and python3 on a Raspberry Pi wi
 │   ├── README.md               # Details on using the libplctag library
 
 ├── Images                      # Images of battens to test code with
-
-├── Old                         # Badly documented older code used for quick tests
-                                  - left for reference
+├── Old                         # Previous versions or quick tests left for reference
 ├── Videos                      # Videos of battens to test code with
 
 ├── BackgroundRemovalTest.py    # Removes a settable background from a video 
