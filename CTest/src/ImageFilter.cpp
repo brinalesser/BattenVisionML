@@ -1,6 +1,5 @@
 /**
- * This program tests image processing capablilities without using OpenCV
- * processing libraries.
+ * This program that processes each frame of a video pixel by pixel
  * 
  * @author Sabrina Lesser (Sabrina.Lesser@rfpco.com)
  * @date 8/2/2021
@@ -45,7 +44,13 @@ int main(int argc, char* argv[]){
 				break;
 			}
 
-			//control keys
+			/** 
+				keypress:
+				q: quit program
+				esc: quit program
+				s: take screenshot of current frame
+				p: pause on the current frame 
+			**/
 			int key = cv::waitKey(1) & 255;
 			if(key == 27 || key == 113){ //esc or q
 				std::cout << "Video ended by user" << std::endl;
@@ -63,9 +68,11 @@ int main(int argc, char* argv[]){
 			}
 			
 		}
+		//close all OpenCV windows
 		cv::destroyAllWindows();
 		return 0;
 	}
+	
 	//camera frame not captured
 	else{
 		std::cout << "Cannot get video file" << std::endl;
