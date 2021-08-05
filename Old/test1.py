@@ -1,6 +1,16 @@
+'''
+This program was an attempt to isolate the dominant colors in a stack of battens.
+
+@author Sabrina Lesser (Sabrina.Lesser@rfpco.com)
+@date last modified  4/2021
+'''
+
 import cv2 as cv
 import numpy as np
+
 '''
+#Data dump:
+
 Blue Max Idx: 156, Blue Max: [711.]
 Blue Max Idx: 162, Blue Max: [1404.]
 Blue Max Idx: 161, Blue Max: [1623.]
@@ -36,6 +46,11 @@ Red Max Idx: 160, Red Max: [1776.]
 Red Max Idx: 152, Red Max: [639.]
 Red Max Idx: 195, Red Max: [786.]
 Red Max Idx: 185, Red Max: [1341.]
+
+'''
+
+'''
+#Trackbars to tune in real time
 
 title_window = 'Trackbars'
 cv.namedWindow(title_window)
@@ -91,60 +106,87 @@ cv.createTrackbar("Green Low Threshold", title_window, g_low, bgr_max, tb_cb_gl)
 cv.createTrackbar("Green High Threshold", title_window, g_high, bgr_max, tb_cb_gh)
 cv.createTrackbar("Red Low Threshold", title_window, r_low, bgr_max, tb_cb_rl)
 cv.createTrackbar("Red High Threshold", title_window, r_high, bgr_max, tb_cb_rh)
+
+'''
+
+'''
+Detect region of interest
+@param frame the current frame
+@return the frame cropped to the region of interest
 '''
 def detect_frame(frame):
+    #blur and convert to grayscale
     img = cv.medianBlur(frame, 5)
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    #binary threshold to isolate white background
     ret, thresh = cv.threshold(gray, 200, 255, cv.THRESH_BINARY)
+    #find contours
     contours, hierarchy = cv.findContours(thresh, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    
+    #get largest contour
     areas = [cv.contourArea(c) for c in contours]
     idx = np.argmax(areas)
-    
+    #draw rectangle around largest contour
     x,y,w,h = cv.boundingRect(contours[idx])
     cv.rectangle(frame, (x,y), (x+w,y+h), (0,255,0),2)
     cv.imshow("Frame", frame)
+    #return the region inside the largest contour
     return frame[y+15:y+h-15,x+15:x+w-15]
 
+'''
+Detect the dominant colors in an image and display as a histogram
+@param im the image
+'''
 def detect(im):
+    #convert to grayscale and blur
     gray = cv.cvtColor(im, cv.COLOR_BGR2GRAY)
     blur = cv.medianBlur(gray, 5)
     blur2 = cv.bilateralFilter(blur, 7, 75, 75)
+    #get edges
     edges = cv.Canny(image=blur2, threshold1=0, threshold2=150)
+    #get contours
     contours, hierarchy = cv.findContours(edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    
+    #get area of each contour
     areas = [cv.contourArea(c) for c in contours]
-    
+    #iterate through the contours
     for contour in contours:
+        #get the bounding rectangle for the contour, then show it
         img = np.copy(im)
         x,y,w,h = cv.boundingRect(contour)
         cv.rectangle(img, (x,y), (x+w,y+h), (0,255,0),2)
         cv.imshow("Img",img)
         
+        #only look at the region inside the bounding rectangle
         bounded = im[y:y+h,x:x+w]
+        #make a histogram of the blue, green, and red values present in the region
         bgr_planes = cv.split(bounded)     
         b_hist = cv.calcHist(bgr_planes, [0], None, [256], (0, 256), accumulate=False)
         g_hist = cv.calcHist(bgr_planes, [1], None, [256], (0, 256), accumulate=False)
         r_hist = cv.calcHist(bgr_planes, [2], None, [256], (0, 256), accumulate=False)
 
+        #find the location of the highest peaks in the histograms (most dominant color)
         idx_b = np.argmax(b_hist)
         idx_g = np.argmax(g_hist)
         idx_r = np.argmax(r_hist)
         
+        #print the dominant colors
         print("Blue Max Idx: "+ str(idx_b) + ", Blue Max: " + str(b_hist[idx_b]))
         print("Green Max Idx: "+ str(idx_g) + ", Green Max: " + str(g_hist[idx_g]))
         print("Red Max Idx: "+ str(idx_r) + ", Red Max: " + str(r_hist[idx_r]))
         
+        #go to next contour after key is pressed
         while cv.waitKey(0) == -1:
             pass
     
+#open the video
 cap = cv.VideoCapture("./Videos/vid1.mp4")
 if(cap.isOpened() == False):
     print("Video failed to open")
 
+#process the video
 paused = False
 while(cap.isOpened()):
     if not paused:
+        #get the next frame
         ret, frame = cap.read()
     if(ret):
         #bounded_frame = detect_frame(frame.copy())
