@@ -9,7 +9,16 @@ Various vision processing programs using OpenCV and python3 on a Raspberry Pi wi
 ### Top Level
 ```
 .
-├── CTest                       # C++ code for vision processing using
+├── CTest                       # C++ code for vision processing
+│   ├── build   
+│   │   ├── bin                 #folder containing the binary executables for the c++ programs
+│   ├── include
+│   │   ├── ImageFilter.h       #header files for the c++ programs
+│   │   ├── PLCCommTest.h
+│   ├── src
+│   │   ├── ImageFilter.cpp     #c++ program to process an image from the raspberry pi usb camera pixel by pixel
+│   │   ├── PLCCommTest.cpp     #c++ program to communicate with the PLC
+│   ├── CMakeLists.txt          #Cmake file
 ├── Images                      # Images of battens to test code with
 ├── Old                         # Badly documented older code used for quick tests
                                   - left for reference
