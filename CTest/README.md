@@ -67,3 +67,21 @@ Part 3 - Writing a CMakeList File to Create an Executable
 from the library mentioned in Part 2. This can be done thusly:
 
     target_link_libraries (executable_name ${tool_lib} pthread libplctag.a)
+    
+---------------------------------------------------------------------------------
+
+To download OpenCV, run the following command in the terminal on the Raspberry Pi:
+
+    pip3 install opencv-python
+    
+---------------------------------------------------------------------------------
+
+Once all the libraries have been installed, the executables can be rebuilt and 
+run using the following commands in the terminal on the Raspberry Pi starting in 
+the CTest folder using the CMakeLists file in this repository.
+
+    cd build
+    cmake ..
+    make
+    ./bin/name_of_executable_to_run
+
