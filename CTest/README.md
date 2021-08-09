@@ -1,7 +1,7 @@
 
 # Image Processing with C++
 
-
+---------------------------------------------------------------------------------
 ## These are the steps I followed to download and use the libplctag library which allows tags to be read from and written to a PLC using c++ code:
 
 ### Part 1 - Downloading and Installing the Library
