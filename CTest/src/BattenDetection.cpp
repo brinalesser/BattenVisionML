@@ -1,8 +1,9 @@
 /**
- * This program that detects the gap between battens
+ * This program detects the gap between battens and draws a line there.
+ * It works best on a close up view of a stack of battens.
  * 
  * @author Sabrina Lesser (Sabrina.Lesser@rfpco.com)
- * @date 8/6/2021
+ * @date 8/9/2021
  **/
  
 #include "BattenDetection.h"
@@ -81,7 +82,7 @@ int main(int argc, char* argv[]){
 }
 
 /**
- * Do edge detection and get the lines along the edges of an image
+ * Do edge detection and get the lines along the edges for an image
  * 
  * @param im an image
  * @return a vector holding lines represented as a Vec4i
@@ -101,7 +102,7 @@ std::vector<cv::Vec4i> get_lines(cv::Mat im){
 }
 
 /**
- * Merge lines together to get one line where the gap in the battens is
+ * Merge lines together to get one line that spans the frame where the gap in the battens is
  * 
  * @param lines a vector holding lines represented as a Vec4i
  * @param frame_width the width of the frame
@@ -168,7 +169,8 @@ std::vector<cv::Vec4i> merge_lines(std::vector<cv::Vec4i> lines, int frame_width
 		
 	}
 	
-	//get lines of best fit for each group
+	//calculate lines of best fit for each group using simple linear regression
+	//(reference: https://en.wikipedia.org/wiki/Simple_linear_regression#Fitting_the_regression_line)
 	std::vector<cv::Vec4i> merged;
 	for(int i = 0; i < points.size(); i++){
 		int n = points[i].size(); //number of points to make the line with
