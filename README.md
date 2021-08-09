@@ -35,7 +35,7 @@ Various vision processing programs using OpenCV and python3 on a Raspberry Pi wi
 ├── ColorTuneBGR.py             # Used to find the BGR color values for an object
 ├── ColorTuneHSV.py             # Used to find the HSV color values in a frame
 ├── DetectionMethodsTest.py     # Tests different OpenCV library feature and edge detection methods
-├── ImageFilter                 # An attempt to process frames pixel by pixel
+├── ImageFilter.py              # An attempt to process frames pixel by pixel
                                   - too slow using python: see CTest instead
 ├── LineMergeTest.py            # An attempt to make edge lines steadier
                                   - slow: see LineTest.py instead
