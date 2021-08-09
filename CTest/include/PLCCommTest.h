@@ -13,13 +13,9 @@
 #include <unistd.h>
 #include <strings.h>
 #include <stdint.h>
-#include <iostream>
 
 //PLC communications library
 #include <libplctag.h>
-
-#define snprintf_platform snprintf
-#define sscanf_platform sscanf
 	
 //paramaters for creating plc tag handles
 #define REQUIRED_VERSION 2,1,0
@@ -30,9 +26,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-extern int util_sleep_ms(int ms);
-extern int64_t util_time_ms(void);
 
 #ifdef __cplusplus
 }
