@@ -2,15 +2,13 @@
 # Image Processing with C++
 
 ---------------------------------------------------------------------------------
-## These are the steps I followed to download and use the libplctag library which allows tags to be read from and written to a PLC using c++ code:
+## These are the steps I followed to download and use the libplctag library for reading from and writing to a PLC tag using C++ code:
 
 ### Part 1 - Downloading and Installing the Library
 
 1. Get the library from git here: https://github.com/libplctag/libplctag
 
-    1a. on line 535 of the CMakeLists.txt file, I changed the DESTINATION of 
-    the installation from lib${LIB_SUFFIX} to /usr/lib to change where
-    the static library was installed
+    1a. on line 535 of the CMakeLists.txt file, I changed the DESTINATION of the installation from lib${LIB_SUFFIX} to /usr/lib to change where the static library was installed
 
 2. Do the following commands in the top level of the libplctag folder:
         
@@ -23,7 +21,7 @@
 
 1. To use the library functions, #include <libplctag.h> in the .c/cpp/h file
 
-2. To create a tag handle to a PLC tag, use the following function:
+2. To create a tag handle for a PLC tag, use the following function:
     
         int32_t plc_tag_create(const char *attrib_str, int timeout);
 
@@ -31,8 +29,7 @@
 
         "protocol=ab_eip&gateway=[IP address]&path=1,2&cpu=controllogix&name=TAG_NAME"
 
-    2b. A list of the different attributes that can be specified such as the size of 
-    the tag and the number of tags to read/write can be found here: 
+    2b. A list of the different attributes that can be specified such as the size of the tag and the number of tags to read/write can be found here: 
     https://github.com/libplctag/libplctag/wiki/Tag-String-Attributes
         
     2c. An example for how to determine the path attribute can be found here:
@@ -56,12 +53,11 @@
 
 ### Part 3 - Writing a CMakeList File to Create an Executable
 
-1. Make an executable with the source and header files like so:
+1. Add an executable with the source and header files for a program that uses the library.
 
         add_executable (executable_name ${SRC_FILES} ${HEADER_FILES})
     
-2. Link the libplctag AND pthread libraries to the executable to use the functions 
-from the library mentioned in Part 2. This can be done thusly:
+2. Link both the libplctag and pthread libraries to the executable to use the functions from the library mentioned in Part 2.
 
         target_link_libraries (executable_name ${tool_lib} pthread libplctag.a)
     
@@ -79,9 +75,9 @@ Once all the libraries have been installed, the executables can be rebuilt and
 run using the following commands in the terminal on the Raspberry Pi starting in 
 the CTest folder, using the CMakeLists file in the CTest folder.
     
-    mkdir build #don't need to do this if folder already exists
+    mkdir build   (don't need to do this if folder already exists)
     cd build
-    cmake ..    #don't need to do this if CMakeLists.txt has not been changed
+    cmake ..      (don't need to do this if CMakeLists.txt has not been changed)
     make
     ./bin/name_of_executable_to_run
 
