@@ -2,7 +2,8 @@
 Test repo using vision processing on battens
 
 ## Description
-Various vision processing programs using OpenCV and python3 on a Raspberry Pi with a USB camera. 
+Various vision processing programs using OpenCV and python3 or C++ on a Raspberry Pi
+with a USB camera. For the purpose of detecting battens to pick up with a robotic arm.
 
 ## File Structure
 
