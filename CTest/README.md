@@ -68,6 +68,8 @@ To install OpenCV, run the following command in the terminal on the Raspberry Pi
 
     pip3 install opencv-python
     
+An example using OpenCV Trackbars is in the ImageFilter program. To use more advanced OpenCV GUI tools, QT has to be downloaded and installed.
+    
 ---------------------------------------------------------------------------------
 ## Rebuiling the executables
 
