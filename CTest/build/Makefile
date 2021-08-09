@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named batten_detect
+
+# Build rule for target.
+batten_detect: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 batten_detect
+.PHONY : batten_detect
+
+# fast build rule for target.
+batten_detect/fast:
+	$(MAKE) -f CMakeFiles/batten_detect.dir/build.make CMakeFiles/batten_detect.dir/build
+.PHONY : batten_detect/fast
+
+#=============================================================================
 # Target rules for targets named image_filter
 
 # Build rule for target.
@@ -135,6 +148,33 @@ plc_comm_test: cmake_check_build_system
 plc_comm_test/fast:
 	$(MAKE) -f CMakeFiles/plc_comm_test.dir/build.make CMakeFiles/plc_comm_test.dir/build
 .PHONY : plc_comm_test/fast
+
+src/BattenDetection.o: src/BattenDetection.cpp.o
+
+.PHONY : src/BattenDetection.o
+
+# target to build an object file
+src/BattenDetection.cpp.o:
+	$(MAKE) -f CMakeFiles/batten_detect.dir/build.make CMakeFiles/batten_detect.dir/src/BattenDetection.cpp.o
+.PHONY : src/BattenDetection.cpp.o
+
+src/BattenDetection.i: src/BattenDetection.cpp.i
+
+.PHONY : src/BattenDetection.i
+
+# target to preprocess a source file
+src/BattenDetection.cpp.i:
+	$(MAKE) -f CMakeFiles/batten_detect.dir/build.make CMakeFiles/batten_detect.dir/src/BattenDetection.cpp.i
+.PHONY : src/BattenDetection.cpp.i
+
+src/BattenDetection.s: src/BattenDetection.cpp.s
+
+.PHONY : src/BattenDetection.s
+
+# target to generate assembly for a file
+src/BattenDetection.cpp.s:
+	$(MAKE) -f CMakeFiles/batten_detect.dir/build.make CMakeFiles/batten_detect.dir/src/BattenDetection.cpp.s
+.PHONY : src/BattenDetection.cpp.s
 
 src/ImageFilter.o: src/ImageFilter.cpp.o
 
@@ -196,10 +236,14 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... batten_detect"
 	@echo "... rebuild_cache"
 	@echo "... image_filter"
 	@echo "... edit_cache"
 	@echo "... plc_comm_test"
+	@echo "... src/BattenDetection.o"
+	@echo "... src/BattenDetection.i"
+	@echo "... src/BattenDetection.s"
 	@echo "... src/ImageFilter.o"
 	@echo "... src/ImageFilter.i"
 	@echo "... src/ImageFilter.s"

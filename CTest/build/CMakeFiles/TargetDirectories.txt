@@ -1,3 +1,4 @@
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/batten_detect.dir
 /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/rebuild_cache.dir
 /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/image_filter.dir
 /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/edit_cache.dir

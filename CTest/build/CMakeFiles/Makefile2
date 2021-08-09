@@ -53,6 +53,7 @@ CMAKE_BINARY_DIR = /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/batten_detect.dir/all
 all: CMakeFiles/image_filter.dir/all
 all: CMakeFiles/plc_comm_test.dir/all
 
@@ -64,10 +65,38 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/batten_detect.dir/clean
 clean: CMakeFiles/image_filter.dir/clean
 clean: CMakeFiles/plc_comm_test.dir/clean
 
 .PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/batten_detect.dir
+
+# All Build rule for target.
+CMakeFiles/batten_detect.dir/all:
+	$(MAKE) -f CMakeFiles/batten_detect.dir/build.make CMakeFiles/batten_detect.dir/depend
+	$(MAKE) -f CMakeFiles/batten_detect.dir/build.make CMakeFiles/batten_detect.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles --progress-num=1,2 "Built target batten_detect"
+.PHONY : CMakeFiles/batten_detect.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/batten_detect.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/batten_detect.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles 0
+.PHONY : CMakeFiles/batten_detect.dir/rule
+
+# Convenience name for target.
+batten_detect: CMakeFiles/batten_detect.dir/rule
+
+.PHONY : batten_detect
+
+# clean rule for target.
+CMakeFiles/batten_detect.dir/clean:
+	$(MAKE) -f CMakeFiles/batten_detect.dir/build.make CMakeFiles/batten_detect.dir/clean
+.PHONY : CMakeFiles/batten_detect.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/image_filter.dir
@@ -76,7 +105,7 @@ clean: CMakeFiles/plc_comm_test.dir/clean
 CMakeFiles/image_filter.dir/all:
 	$(MAKE) -f CMakeFiles/image_filter.dir/build.make CMakeFiles/image_filter.dir/depend
 	$(MAKE) -f CMakeFiles/image_filter.dir/build.make CMakeFiles/image_filter.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles --progress-num=1,2 "Built target image_filter"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles --progress-num=3,4 "Built target image_filter"
 .PHONY : CMakeFiles/image_filter.dir/all
 
 # Build rule for subdir invocation for target.
@@ -103,7 +132,7 @@ CMakeFiles/image_filter.dir/clean:
 CMakeFiles/plc_comm_test.dir/all:
 	$(MAKE) -f CMakeFiles/plc_comm_test.dir/build.make CMakeFiles/plc_comm_test.dir/depend
 	$(MAKE) -f CMakeFiles/plc_comm_test.dir/build.make CMakeFiles/plc_comm_test.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles --progress-num=3,4 "Built target plc_comm_test"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles --progress-num=5,6 "Built target plc_comm_test"
 .PHONY : CMakeFiles/plc_comm_test.dir/all
 
 # Build rule for subdir invocation for target.

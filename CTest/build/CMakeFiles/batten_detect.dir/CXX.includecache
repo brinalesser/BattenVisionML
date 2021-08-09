@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/BattenDetection.h
+opencv2/opencv.hpp
+-
+iostream
+-
+string
+-
+vector
+-
+math.h
+-
+
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/src/BattenDetection.cpp
+BattenDetection.h
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/src/BattenDetection.h
+

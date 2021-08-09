@@ -85,7 +85,7 @@ def merge_lines(lines, img):
         fn = np.poly1d(z)
         lines.append([x, fn(x)])
         plt.plot(x,fn(x),color='orange')
-    plt.show()
+    #plt.show()
     return lines
 
 '''
@@ -135,14 +135,7 @@ if __name__=='__main__':
                 y1 = int(line[1][0])
                 y2 = int(line[1][-1])
                 cv.line(frame,(x1,y1),(x2,y2),(255,0,0),2)
-            #cv.imshow("Lines",im_lines)
-            '''
-            #find bounding recangle around gap when frame is not close to battens
-            im_rect = copy.deepcopy(frame)
-            x,y,w,h = get_rect(im_rect)
-            cv.rectangle(im_rect, (x, y),(x+w, y+h), (0,0,255), 3)
-            cv.imshow("Image",im_rect)
-            '''
+            cv.imshow("Lines",frame)
         else:
             print("Failed to read frame")
             break
