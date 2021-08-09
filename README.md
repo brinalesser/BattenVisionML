@@ -21,7 +21,7 @@ with a USB camera. For the purpose of detecting battens to pick up with a roboti
 │   │   ├── PLCCommTest.cpp     # C++ program to communicate with the PLC
 │   │   ├── BattenDetection.cpp # C++ program for batten detection (use close-up view)
 │   ├── CMakeLists.txt          # CMake file for creating executables
-│   ├── README.md               # Details on using the libplctag library
+│   ├── README.md               # Details on using the libplctag library and the C++ code in the CTest folder
 
 ├── Images                      # Images of battens to test code with
 ├── Old                         # Previous versions and quick tests left for reference
