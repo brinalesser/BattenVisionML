@@ -70,7 +70,7 @@ from the library mentioned in Part 2. This can be done thusly:
     
 ---------------------------------------------------------------------------------
 
-To download OpenCV, run the following command in the terminal on the Raspberry Pi:
+To install OpenCV, run the following command in the terminal on the Raspberry Pi:
 
     pip3 install opencv-python
     
@@ -78,7 +78,7 @@ To download OpenCV, run the following command in the terminal on the Raspberry P
 
 Once all the libraries have been installed, the executables can be rebuilt and 
 run using the following commands in the terminal on the Raspberry Pi starting in 
-the CTest folder using the CMakeLists file in this repository.
+the CTest folder using the CMakeLists file in the CTest folder.
 
     cd build
     cmake ..
