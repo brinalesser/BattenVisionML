@@ -114,15 +114,15 @@ std::vector<cv::Vec4i> merge_lines(std::vector<cv::Vec4i> lines, int frame_width
 		return lines;
 	}
 	
-	//initialize
-	std::vector<std::vector<line_t>> points;
+	//each index of this will hold a group of lines to merge:
+	std::vector<std::vector<line_t>> points; 
+	//this will be a vector of indices of groups to merge:
 	std::vector<int> groups;
-	int x, y, x_mid, y_mid;
+
 	line_t l;
-	
 	//iterate through the lines to merge lines that are close together
 	for(int line_idx = 0; line_idx < lines.size(); line_idx++){
-		//get midpoint
+		//get midpoint and make line_t
 		l.x_1 = lines[line_idx][0];
 		l.y_1 = lines[line_idx][1];
 		l.x_2 = lines[line_idx][2];
@@ -134,8 +134,8 @@ std::vector<cv::Vec4i> merge_lines(std::vector<cv::Vec4i> lines, int frame_width
 		//close to the midpoint
 		for(int i= 0; i < points.size(); i++){
 			for(int j = 0; j < points[i].size(); j++){
-				//use distance formula to find if points are close
-				if(sqrt(pow(l.x_m-points[i][j].x_m,2)+pow(l.y_m-points[i][j].y_m,2)) < MAX_DIST){
+				//check if points are close
+				if(l.isNear(points[i][j])){
 					//indicate that the groups should be merged
 					groups.push_back(i);
 					break;
@@ -149,6 +149,7 @@ std::vector<cv::Vec4i> merge_lines(std::vector<cv::Vec4i> lines, int frame_width
 			new_group.push_back(l);
 			points.push_back(new_group);
 		}
+		//add point to group, then merge with other groups
 		else{
 			int idx = groups.back();
 			points[idx].push_back(l);
@@ -171,13 +172,16 @@ std::vector<cv::Vec4i> merge_lines(std::vector<cv::Vec4i> lines, int frame_width
 	std::vector<cv::Vec4i> merged;
 	for(int i = 0; i < points.size(); i++){
 		int n = points[i].size(); //number of points to make the line with
-		if(n == 0){ 
-			std::cout << "something went wrong here" << std::endl;
+		
+		if(n < 1){ //empty group
+			std::cout << "Error: wrong number of points to make line" << std::endl;
 		}
-		else if(n == 1){
+		else if(n == 1){ //only one line in group
 			merged.push_back(cv::Vec4i(points[i][0].x_1, points[i][0].y_1, points[i][0].x_2, points[i][0].y_2));
 		}
-		else{
+		else{ //find line of best fit
+			
+			// calculate summations and means
 			double x_sum=0, y_sum=0, xy_sum=0, xx_sum=0;
 			double x, y, x_mean, y_mean;
 			for(int j = 0; j < n; j++) {
@@ -191,10 +195,10 @@ std::vector<cv::Vec4i> merge_lines(std::vector<cv::Vec4i> lines, int frame_width
 			x_mean = x_sum / n;
 			y_mean = y_sum / n;
 			
+			// calculate slope and intercept, then stretch line across frame
 			double denom = xx_sum - x_sum * x_mean;
 			double m, b;
 			int x1, x2, y1, y2;
-			
 			if( std::fabs(denom) > 1e-7 ) { //defined slope
 				m = (xy_sum - x_sum * y_mean) / denom;
 				b = y_mean - m * x_mean;

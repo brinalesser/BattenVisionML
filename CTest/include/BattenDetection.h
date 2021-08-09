@@ -49,6 +49,10 @@ struct line_t {
 	int y_2;
 	int x_m;
 	int y_m;
+	
+	bool isNear(const line_t& other){
+		return sqrt(pow(x_m - other.x_m, 2) + pow(y_m - other.y_m, 2)) < MAX_DIST;
+	}
 };
 
 #endif
