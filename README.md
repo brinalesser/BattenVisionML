@@ -38,8 +38,6 @@ with a USB camera. For the purpose of detecting battens to pick up with a roboti
 ├── DetectionMethodsTest.py     # Tests different OpenCV library feature and edge detection methods
 ├── ImageFilter.py              # An attempt to process frames pixel by pixel
                                   - too slow using python: see CTest instead
-├── LineMergeTest.py            # An attempt to make edge lines steadier
-                                  - slow: see LineTest.py instead
 ├── LineTest.py                 # Identifies the location of the gap between battens on close up frames
 ├── ObjectDetectTest.py         # Object detection using Cascade Classifier
                                   - was unable to create a good enough model for the the battens to be accurately identified
