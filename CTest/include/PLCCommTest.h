@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <strings.h>
 #include <stdint.h>
+#include <iostream>
 
 //PLC communications library
 #include <libplctag.h>

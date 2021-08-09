@@ -47,6 +47,8 @@ int main()
     }
     
     /* continuously write the value of the switches tag to the LEDs tag */
+    std::cout << "\nwriting switch values to LEDs" << std::endl;
+    std::cout << "set first switch to ON position or type ctrl+c to stop" << std::endl;
     while(true){
         
         /* get the switches tag value */
