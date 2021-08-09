@@ -40,17 +40,17 @@
 
 3. To free a tag, use the following function:
 
-    int plc_tag_destroy(int32_t tag);
+        int plc_tag_destroy(int32_t tag);
     
 4. To read a tag, use the following functions:
     
-    int plc_tag_read(int32_t tag, int timeout);
-    size_t plc_tag_get_size_t(int32_t tag, int offset);
+        int plc_tag_read(int32_t tag, int timeout);
+        size_t plc_tag_get_size_t(int32_t tag, int offset);
     
 5. To write to a tag, use the following funtions:
 
-    int plc_tag_set_size_t(int32_t tag, int offset, size_t new_value);
-    int plc_tag_write(int32_t tag, int timeout);
+        int plc_tag_set_size_t(int32_t tag, int offset, size_t new_value);
+        int plc_tag_write(int32_t tag, int timeout);
         
 6. For additional functions, see the API here:
     
@@ -60,12 +60,12 @@
 
 1. Make an executable with the source and header files like so:
 
-    add_executable (executable_name ${SRC_FILES} ${HEADER_FILES})
+        add_executable (executable_name ${SRC_FILES} ${HEADER_FILES})
     
 2. Link the libplctag AND pthread libraries to the executable to use the functions 
 from the library mentioned in Part 2. This can be done thusly:
 
-    target_link_libraries (executable_name ${tool_lib} pthread libplctag.a)
+        target_link_libraries (executable_name ${tool_lib} pthread libplctag.a)
     
 ---------------------------------------------------------------------------------
 ## OpenCV installation
