@@ -14,9 +14,11 @@ Various vision processing programs using OpenCV and python3 on a Raspberry Pi wi
 │   ├── include
 │   │   ├── ImageFilter.h       # Header file for image filtering program
 │   │   ├── PLCCommTest.h       # Header file for PLC communication program
+│   │   ├── BattenDetection.h   # Header file for baten detection program
 │   ├── src
 │   │   ├── ImageFilter.cpp     # C++ program to process an image from the raspberry pi usb camera pixel by pixel
 │   │   ├── PLCCommTest.cpp     # C++ program to communicate with the PLC
+│   │   ├── BattenDetection.cpp # C++ program for batten detection (use close-up view)
 │   ├── CMakeLists.txt          # CMake file for creating executables
 │   ├── README.md               # Details on using the libplctag library
 
