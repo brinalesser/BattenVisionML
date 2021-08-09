@@ -52,9 +52,7 @@
         int plc_tag_set_size_t(int32_t tag, int offset, size_t new_value);
         int plc_tag_write(int32_t tag, int timeout);
         
-6. For additional functions, see the API here:
-    
-    https://github.com/libplctag/libplctag/wiki/API
+6. For additional functions, see the API here: https://github.com/libplctag/libplctag/wiki/API
 
 ### Part 3 - Writing a CMakeList File to Create an Executable
 
