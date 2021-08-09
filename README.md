@@ -1,5 +1,5 @@
 # BattenVisionML
-Test repo using vision processing on battens
+Test repo for using vision processing on battens
 
 ## Description
 Various vision processing programs using OpenCV and python3 or C++ on a Raspberry Pi
