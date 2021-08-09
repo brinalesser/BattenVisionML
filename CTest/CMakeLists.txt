@@ -16,7 +16,7 @@ set(IMAGE_FILTER_HEADERS include/ImageFilter.h)
 set(PLC_COMM_HEADERS include/PLCCommTest.h)
 set(BATTEN_DETECT_HEADERS include/BattenDetection.h)
 
-set(THREAD_LIB_LINK ${tool_lib} pthread)
+set(THREAD_LIB_LINK pthread)
 set(PLC_LIB_LINK libplctag.a)
 
 add_executable( image_filter ${IMAGE_FILTER_SRC} ${IMAGE_FILTER_HEADERS})
