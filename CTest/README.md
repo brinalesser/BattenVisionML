@@ -59,16 +59,16 @@
     
 2. Link both the libplctag and pthread libraries to the executable to use the functions from the library mentioned in Part 2.
 
-        target_link_libraries (executable_name ${tool_lib} pthread libplctag.a)
+        target_link_libraries (executable_name pthread libplctag.a)
     
 ---------------------------------------------------------------------------------
 ## OpenCV installation
 
-To install OpenCV, run the following command in the terminal on the Raspberry Pi:
+To install OpenCV, run the following command in the terminal on the Raspberry Pi (assuming python3 is installed):
 
     pip3 install opencv-python
     
-An example using OpenCV Trackbars is in the ImageFilter program. To use more advanced OpenCV GUI tools, QT has to be downloaded and installed.
+An example using OpenCV Trackbars is in the ImageFilter program. To use more advanced OpenCV GUI tools, QT would have to be downloaded and installed.
     
 ---------------------------------------------------------------------------------
 ## Rebuiling the executables
