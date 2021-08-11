@@ -1,5 +1,5 @@
 /**
- * Header file for the c++ program thhat tests reading from and writing to PLC tags using the libplctag library
+ * Header file for the c++ program that tests reading from and writing to PLC tags using the libplctag library
  * 
  * @author Sabrina Lesser (Sabrina.Lesser@rfpco.com)
  * @date 8/5/2021
