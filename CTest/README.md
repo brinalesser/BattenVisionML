@@ -2,7 +2,7 @@
 # Image Processing with C++
 
 ---------------------------------------------------------------------------------
-## These are the steps I followed to download and use the libplctag library for reading from and writing to a PLC tag using C++ code:
+## How to Use the libplctag Library (for reading/writing PLC tags using C++ code):
 
 ### Part 1 - Downloading and Installing the Library
 
@@ -35,7 +35,7 @@
     2c. An example for how to determine the path attribute can be found here:
     https://docs.inductiveautomation.com/pages/viewpage.action?pageId=1704045
 
-3. To free a tag, use the following function:
+3. To free a tag handle, use the following function:
 
         int plc_tag_destroy(int32_t tag);
     
@@ -62,7 +62,7 @@
         target_link_libraries (executable_name pthread libplctag.a)
     
 ---------------------------------------------------------------------------------
-## OpenCV installation
+## OpenCV Installation
 
 To install OpenCV, run the following command in the terminal on the Raspberry Pi (assuming python3 is installed):
 
@@ -71,11 +71,11 @@ To install OpenCV, run the following command in the terminal on the Raspberry Pi
 An example using OpenCV Trackbars is in the ImageFilter program. To use more advanced OpenCV GUI tools, QT would have to be downloaded and installed.
     
 ---------------------------------------------------------------------------------
-## Rebuiling the executables
+## Rebuilding and Running the Executables
 
 Once all the libraries have been installed, the executables can be rebuilt and 
 run using the following commands in the terminal on the Raspberry Pi starting in 
-the CTest folder, using the CMakeLists file in the CTest folder.
+the CTest folder and using the CMakeLists file in the CTest folder.
     
     mkdir build   (don't need to do this if folder already exists)
     cd build
