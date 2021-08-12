@@ -14,12 +14,13 @@ int main(int argc, char* argv[]){
                                         "&path=","1,2",
                                         "&name=","OUTPUT_LEDS"};
     bool use_camera = true;
-    bool use_plc = false;
+    bool use_plc = true;
     std::string vid_file = "";
     
     while(opt = getopt(argc, argv, "hv:pi:r:t:") != -1){
         switch(opt){
             case 'v': vid_file = optarg; use_camera = false; break;
+            case 'p': use_plc = false; break;
             case 'i': tag_attr_str[5] = std::to_string(optarg); break;
             case 'r': tag_attr_str[7] = std::to_string(optarg); break;
             case 't': tag_attr_str[9] = std::to_string(optarg); break;
@@ -30,15 +31,7 @@ int main(int argc, char* argv[]){
     }
 
 
-    //set up plc tag handle
-    int32_t tag = 0;
-    std::string attr_str = tag_attr_str[0];
-    for(int i = 1; i < 10; i++){ attr_str += tag_attr_str[i]; }
-    int rc = plc_setup(&tag,attr_str);
-    
-    if(rc != 0){
-        exit(EXIT_FAILURE);
-    }
+
     
     cv::VideoCapture cap;
     if(use_camera){
@@ -47,16 +40,30 @@ int main(int argc, char* argv[]){
         cap cv::VideoCapture(vid_file);
     }
     
-	bool pause = false;
-	bool ret = false;
-	int count = 0;
-	cv::Mat frame, new_frame;
-	
 	//camera frame is captured
 	if(cap.isOpened()){
-		//create trackbar window
-		setup_trackbars();
-		
+        
+        bool pause = false;
+        bool ret = false;
+        int count = 0;
+        int rc = 0;
+        rectangle_t bounds;
+        std::vector<rectangle_t> objects;
+        cv::Mat frame, bounded_frame;
+        int32_t tag = 0;
+        
+        //set up plc communication
+        if(use_plc){
+            //put attribute string together
+            std::string attr_str = tag_attr_str[0];
+            for(int i = 1; i < 10; i++){ attr_str += tag_attr_str[i]; }
+            //try to setup
+            rc = plc_setup(&tag,attr_str);    
+            if(rc != 0){ //check status
+                use_plc = false;
+            }
+        }
+            
 		//continue reading frames from the camera
 		while(cap.isOpened()){
 			
@@ -69,8 +76,36 @@ int main(int argc, char* argv[]){
 			if(ret){
 				//process frame
 				cv::imshow("Original",frame);
-				new_frame = process_frame(frame);
-				cv::imshow("Processed Frame", new_frame);
+                bounds = detect_background(frame);
+                bounded_frame = frame[];//TODO
+				objects = detect_objects(bounded_frame);
+                
+                //draw bounds around frame
+                cv::rectangle();
+                //draw grid
+                cv::line();
+                for(int i = 0; i < 8; i++){ cv::line(); }
+                //draw object locations
+                int32_t write_val = 0;
+                for(auto it = objects.begin(); it != objects.end(); ++it){
+                    grid_point_t grid_pt();
+                    cv::rectangle(); //object bounds
+                    cv::circle(); //object midpoint
+                    cv::puText(); //object location
+                    write_val |= (1 << grid_pt.grid_idx);
+                }
+                //write to PLC
+                if(use_plc){
+                    plc_tag_set_int32(tag,TAG_OFFSET,write_val);
+                    rc = plc_tag_write(tag,DATA_TIMEOUT);
+                    
+                    if(rc != PLCTAG_STATUS_OK) {
+                        std::cerr << "ERROR: Unable to write to tag. Error code " << rc << ": " << plc_tag_decode_error(rc));
+                        plc_tag_destroy(tag);
+                        use_plc = false;
+                    }
+                }
+				cv::imshow("Processed Frame", frame);
 			}
 			else{
 				std::cout << "End of video" << std::endl;
@@ -103,6 +138,8 @@ int main(int argc, char* argv[]){
 		}
 		//close all OpenCV windows
 		cv::destroyAllWindows();
+        //free tag
+        plc_tag_destroy(tag);
 		return 0;
 	}
 	
@@ -121,6 +158,7 @@ static void usage(std::string str){
     std::cerr << "\t-i\t\t ip address of PLC\n" << std::endl;
     std::cerr << "\t-r\t\t route to PLC\n" << std::endl;
     std::cerr << "\t-t\t\t PLC output tag name\n" << std::endl;
+    std::cerr << "\t-p\t\t don't use PLC\n" << std::endl;
 }
 int plc_setup(int32_t &tag, std::string attr_str) {
     if(plc_tag_check_lib_version(REQUIRED_VERSION) != PLCTAG_STATUS_OK) {

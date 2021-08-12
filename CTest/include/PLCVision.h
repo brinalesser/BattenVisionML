@@ -28,6 +28,7 @@
 //paramaters for creating plc tag handles
 #define REQUIRED_VERSION 2,1,0
 #define DATA_TIMEOUT 5000
+#define TAG_OFFSET 0
 
 //vision params
 #define PAGE_WIDTH 11
