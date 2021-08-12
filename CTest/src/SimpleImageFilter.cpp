@@ -1,19 +1,11 @@
 /**
  * This program that processes each frame of a video pixel by pixel
- * with a trackbar to adjust the color threshold
  * 
  * @author Sabrina Lesser (Sabrina.Lesser@rfpco.com)
  * @date 8/2/2021
  **/
  
-#include "ImageFilter.h"
-
-int blue_min;
-int blue_max;
-int green_min;
-int green_max;
-int red_min;
-int red_max;
+#include "SimpleImageFilter.h"
 
 /**
  * Get video from pi camera and process it frame by frame
@@ -28,8 +20,6 @@ int main(int argc, char* argv[]){
 	
 	//camera frame is captured
 	if(cap.isOpened()){
-		//create trackbar window
-		setup_trackbars();
 		
 		//continue reading frames from the camera
 		while(cap.isOpened()){
@@ -109,9 +99,9 @@ cv::Mat process_image(cv::Mat im){
             uchar green = intensity.val[1];
             uchar red = intensity.val[2];
             //color threshold
-            if(blue < blue_min || blue > blue_max ||
-				green < green_min || green > green_max ||
-				red < red_min || red > red_max ) {
+            if(blue < BLUE_MIN || blue > BLUE_MAX ||
+				green < GREEN_MIN || green > GREEN_MAX ||
+				red < RED_MIN || red > RED_MAX ) {
 				//change pixel to black if not within threshold
 				im.at<cv::Vec3b>(y, x) = {0, 0, 0};
 				//change pixel to grayscale if not within threshold
@@ -124,27 +114,3 @@ cv::Mat process_image(cv::Mat im){
 	return im;
 }
 
-/**
- * Trackbar callback function
- **/
-static void tb_cb(int, void*){
-
-}
-/**
- * Setup trackbar window
- **/
-void setup_trackbars(){
-	cv::namedWindow("Trackbars", cv::WINDOW_NORMAL);
-	blue_min = 0;
-	cv::createTrackbar("Blue Min", "Trackbars", &blue_min, MAX_COLOR, tb_cb);
-	blue_max = 255;
-	cv::createTrackbar("Blue Max", "Trackbars", &blue_max, MAX_COLOR, tb_cb);
-	green_min = 0;
-	cv::createTrackbar("Green Min", "Trackbars", &green_min, MAX_COLOR, tb_cb);
-	green_max = 255;
-	cv::createTrackbar("Green Max", "Trackbars", &green_max, MAX_COLOR, tb_cb);
-	red_min = 0;
-	cv::createTrackbar("Red Min", "Trackbars", &red_min, MAX_COLOR, tb_cb);
-	red_max = 255;
-	cv::createTrackbar("Red Max", "Trackbars", &red_max, MAX_COLOR, tb_cb);
-}

@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/SimpleImageFilter.h
+opencv2/opencv.hpp
+-
+iostream
+-
+string
+-
+
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/src/SimpleImageFilter.cpp
+SimpleImageFilter.h
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/src/SimpleImageFilter.h
+

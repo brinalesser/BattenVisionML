@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named batten_detect
-
-# Build rule for target.
-batten_detect: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 batten_detect
-.PHONY : batten_detect
-
-# fast build rule for target.
-batten_detect/fast:
-	$(MAKE) -f CMakeFiles/batten_detect.dir/build.make CMakeFiles/batten_detect.dir/build
-.PHONY : batten_detect/fast
-
-#=============================================================================
 # Target rules for targets named image_filter
 
 # Build rule for target.
@@ -137,6 +124,19 @@ image_filter/fast:
 .PHONY : image_filter/fast
 
 #=============================================================================
+# Target rules for targets named plc_vision
+
+# Build rule for target.
+plc_vision: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 plc_vision
+.PHONY : plc_vision
+
+# fast build rule for target.
+plc_vision/fast:
+	$(MAKE) -f CMakeFiles/plc_vision.dir/build.make CMakeFiles/plc_vision.dir/build
+.PHONY : plc_vision/fast
+
+#=============================================================================
 # Target rules for targets named plc_comm_test
 
 # Build rule for target.
@@ -148,6 +148,32 @@ plc_comm_test: cmake_check_build_system
 plc_comm_test/fast:
 	$(MAKE) -f CMakeFiles/plc_comm_test.dir/build.make CMakeFiles/plc_comm_test.dir/build
 .PHONY : plc_comm_test/fast
+
+#=============================================================================
+# Target rules for targets named simple_image_filter
+
+# Build rule for target.
+simple_image_filter: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 simple_image_filter
+.PHONY : simple_image_filter
+
+# fast build rule for target.
+simple_image_filter/fast:
+	$(MAKE) -f CMakeFiles/simple_image_filter.dir/build.make CMakeFiles/simple_image_filter.dir/build
+.PHONY : simple_image_filter/fast
+
+#=============================================================================
+# Target rules for targets named batten_detect
+
+# Build rule for target.
+batten_detect: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 batten_detect
+.PHONY : batten_detect
+
+# fast build rule for target.
+batten_detect/fast:
+	$(MAKE) -f CMakeFiles/batten_detect.dir/build.make CMakeFiles/batten_detect.dir/build
+.PHONY : batten_detect/fast
 
 src/BattenDetection.o: src/BattenDetection.cpp.o
 
@@ -230,17 +256,73 @@ src/PLCCommTest.cpp.s:
 	$(MAKE) -f CMakeFiles/plc_comm_test.dir/build.make CMakeFiles/plc_comm_test.dir/src/PLCCommTest.cpp.s
 .PHONY : src/PLCCommTest.cpp.s
 
+src/PLCVision.o: src/PLCVision.cpp.o
+
+.PHONY : src/PLCVision.o
+
+# target to build an object file
+src/PLCVision.cpp.o:
+	$(MAKE) -f CMakeFiles/plc_vision.dir/build.make CMakeFiles/plc_vision.dir/src/PLCVision.cpp.o
+.PHONY : src/PLCVision.cpp.o
+
+src/PLCVision.i: src/PLCVision.cpp.i
+
+.PHONY : src/PLCVision.i
+
+# target to preprocess a source file
+src/PLCVision.cpp.i:
+	$(MAKE) -f CMakeFiles/plc_vision.dir/build.make CMakeFiles/plc_vision.dir/src/PLCVision.cpp.i
+.PHONY : src/PLCVision.cpp.i
+
+src/PLCVision.s: src/PLCVision.cpp.s
+
+.PHONY : src/PLCVision.s
+
+# target to generate assembly for a file
+src/PLCVision.cpp.s:
+	$(MAKE) -f CMakeFiles/plc_vision.dir/build.make CMakeFiles/plc_vision.dir/src/PLCVision.cpp.s
+.PHONY : src/PLCVision.cpp.s
+
+src/SimpleImageFilter.o: src/SimpleImageFilter.cpp.o
+
+.PHONY : src/SimpleImageFilter.o
+
+# target to build an object file
+src/SimpleImageFilter.cpp.o:
+	$(MAKE) -f CMakeFiles/simple_image_filter.dir/build.make CMakeFiles/simple_image_filter.dir/src/SimpleImageFilter.cpp.o
+.PHONY : src/SimpleImageFilter.cpp.o
+
+src/SimpleImageFilter.i: src/SimpleImageFilter.cpp.i
+
+.PHONY : src/SimpleImageFilter.i
+
+# target to preprocess a source file
+src/SimpleImageFilter.cpp.i:
+	$(MAKE) -f CMakeFiles/simple_image_filter.dir/build.make CMakeFiles/simple_image_filter.dir/src/SimpleImageFilter.cpp.i
+.PHONY : src/SimpleImageFilter.cpp.i
+
+src/SimpleImageFilter.s: src/SimpleImageFilter.cpp.s
+
+.PHONY : src/SimpleImageFilter.s
+
+# target to generate assembly for a file
+src/SimpleImageFilter.cpp.s:
+	$(MAKE) -f CMakeFiles/simple_image_filter.dir/build.make CMakeFiles/simple_image_filter.dir/src/SimpleImageFilter.cpp.s
+.PHONY : src/SimpleImageFilter.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... batten_detect"
 	@echo "... rebuild_cache"
 	@echo "... image_filter"
-	@echo "... edit_cache"
+	@echo "... plc_vision"
 	@echo "... plc_comm_test"
+	@echo "... simple_image_filter"
+	@echo "... edit_cache"
+	@echo "... batten_detect"
 	@echo "... src/BattenDetection.o"
 	@echo "... src/BattenDetection.i"
 	@echo "... src/BattenDetection.s"
@@ -250,6 +332,12 @@ help:
 	@echo "... src/PLCCommTest.o"
 	@echo "... src/PLCCommTest.i"
 	@echo "... src/PLCCommTest.s"
+	@echo "... src/PLCVision.o"
+	@echo "... src/PLCVision.i"
+	@echo "... src/PLCVision.s"
+	@echo "... src/SimpleImageFilter.o"
+	@echo "... src/SimpleImageFilter.i"
+	@echo "... src/SimpleImageFilter.s"
 .PHONY : help
 
 

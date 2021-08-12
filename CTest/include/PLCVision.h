@@ -18,61 +18,55 @@
 //Standard Libraries
 //#include <stdio.h>
 //#include <stdlib.h>
-//#include <unistd.h>
+#include <unistd.h>
 //#include <stdint.h>
 #include <iostream>
 #include <string>
 //#include <vector>
 //#include <math.h>
 
-//paramaters for creating plc tag handles
-#define REQUIRED_VERSION 2,1,0
-#define DATA_TIMEOUT 5000
-#define TAG_OFFSET 0
+//plc params
+#define REQUIRED_VERSION		2,1,0
+#define DATA_TIMEOUT			5000
+#define TAG_OFFSET				0
 
-//vision params
-#define PAGE_WIDTH 11
-#define PAGE_HEIGHT 17
-#define PIXEL_WIDTH_PER_PAGE 200
-#define PIXEL_HEIGHT_PER_PAGE 275
-#define X_OFFSET 0
-#define Y_OFFSET 0
-#define X_INCREMENT (PIXEL_WIDTH_PER_PAGE / PAGE_WIDTH)
-#define Y_INCREMENT (PIXEL_HEIGHT_PER_PAGE / PAGE_HEIGHT)
+//frame params
+#define PAGE_WIDTH				11
+#define PAGE_HEIGHT				17
+#define PIXEL_WIDTH_PER_PAGE	200
+#define PIXEL_HEIGHT_PER_PAGE	275
+#define X_OFFSET				0
+#define Y_OFFSET				0
+#define X_INCREMENT				(PIXEL_WIDTH_PER_PAGE / PAGE_WIDTH)
+#define Y_INCREMENT				(PIXEL_HEIGHT_PER_PAGE / PAGE_HEIGHT)
+#define MIN_AREA				20
 
-struct line_t {
-	int x_1;
-	int x_2;
-	int y_1;
-	int y_2;
-	int x_m;//midpoint
-	int y_m;//midpoint
-	
-	bool isNear(const line_t& other){
-		return sqrt(pow(x_m - other.x_m, 2) + pow(y_m - other.y_m, 2)) < MAX_DIST;
-	}
-};
+//color params (bgr)
+#define MIN_BLUE				252
+#define MAX_BLUE				256
+#define MIN_GREEN				252
+#define MAX_GREEN				256
+#define MIN_RED					205
+#define MAX_RED					220
 
-struct point_t {
-	int x;
-	int y;
-}
-
-struct rectangle_t {
-	int x;
-	int y;
-	int w;
-	int h;
-	rectangle_t() : x(0), y(0), w(0), h(0) {}
-	rectangle_t(int px, int py, int pw, int ph) : x(px), y(py), w(pw), h(ph) {}
-}
+//color params (hsv)
+#define MIN_HUE					70
+#define MAX_HUE					90
+#define MIN_SATURATION			15
+#define MAX_SATURATION			60
+#define MIN_VALUE				245
+#define MAX_VALUE				255
 
 struct grid_point_t {
-	point_t p;
+	double x;
+	double y;
 	int grid_idx;
-	grid_point_t(point_t point, int height, int width) {
-		p.x = X_OFFSET + (point.x / X_INCREMENT);
-		p.y = Y_OFFSET + (point.y / Y_INCREMENT);
+	grid_point_t() : x(0), y(0), grid_idx(0) {
+	}
+	grid_point_t(cv::Point point, int width, int height) {
+		//round x and y to 2 decimal places
+		x = X_OFFSET + ((double)point.x / X_INCREMENT);
+		y = Y_OFFSET + ((double)point.y / Y_INCREMENT);
 		//calculate grid position for 2x8 grid
 		if(point.x < (width/2)){
 			if(point.y < (height*0.125))		{ grid_idx = 0; }
@@ -94,17 +88,14 @@ struct grid_point_t {
 			else if(point.y < (height*0.875))	{ grid_idx = 14; }
 			else 								{ grid_idx = 15; }
 		}
-		
 	}
-	
-}
+};
 
-static void usage(std::string str);
-int plc_setup(int32_t &tag, std::string attr_str);
-cv::Mat process_frame(cv::Mat im);
-rectangle_t detect_background(cv::Mat im);
-std::vector<rectangle_t> detect_objects(cv::Mat im);
-
+static void usage(std::string str, std::string opt);
+int plc_setup(int32_t &tag, const char * attr_str);
+cv::Rect detect_background(cv::Mat im);
+std::vector<cv::Rect> detect_objects(cv::Mat im);
+int get_largest_contour(std::vector<std::vector<cv::Point>> contours);
 
 #ifdef __cplusplus
 extern "C" {

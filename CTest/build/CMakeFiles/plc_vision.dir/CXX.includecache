@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/PLCVision.h
+opencv2/opencv.hpp
+-
+libplctag.h
+-
+unistd.h
+-
+iostream
+-
+string
+-
+
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/src/PLCVision.cpp
+PLCVision.h
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/src/PLCVision.h
+

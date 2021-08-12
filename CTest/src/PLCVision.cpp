@@ -16,28 +16,57 @@ int main(int argc, char* argv[]){
     bool use_camera = true;
     bool use_plc = true;
     std::string vid_file = "";
-    
-    while(opt = getopt(argc, argv, "hv:pi:r:t:") != -1){
-        switch(opt){
-            case 'v': vid_file = optarg; use_camera = false; break;
-            case 'p': use_plc = false; break;
-            case 'i': tag_attr_str[5] = std::to_string(optarg); break;
-            case 'r': tag_attr_str[7] = std::to_string(optarg); break;
-            case 't': tag_attr_str[9] = std::to_string(optarg); break;
-            case 'h':
-            case '?':
-            default : usage(argv[0]); exit(EXIT_FAILURE);
+    std::string opt;
+    for(int i = 1; i < argc; i++){
+        opt = std::string(argv[i]);
+        if(opt.compare("-v") == 0){
+            i++;
+            if( i >= argc ){
+                usage(argv[0], opt);
+                exit(EXIT_FAILURE);
+            }
+            vid_file = argv[i]; 
+            use_camera = false; 
+        }
+        else if(opt.compare("-p") == 0){
+            use_plc = false;
+        }
+        else if(opt.compare("-i") == 0){
+            i++;
+            if( i >= argc ){
+                usage(argv[0], opt);
+                exit(EXIT_FAILURE);
+            }
+            tag_attr_str[5] = argv[i];
+        }
+        else if(opt.compare("-r") == 0){
+            i++;
+            if( i >= argc ){
+                usage(argv[0], opt);
+                exit(EXIT_FAILURE);
+            }
+            tag_attr_str[7] = argv[i];
+        }
+        else if(opt.compare("-t") == 0){
+            i++;
+            if( i >= argc ){
+                usage(argv[0], opt);
+                exit(EXIT_FAILURE);
+            }
+            tag_attr_str[9] = argv[i];
+        }
+        else{
+            usage(argv[0], opt);
+            exit(EXIT_FAILURE);
         }
     }
-
-
-
     
     cv::VideoCapture cap;
     if(use_camera){
-         cap = cv::VideoCapture(0);
+        cap = cv::VideoCapture(0);
+    } 
     else{
-        cap cv::VideoCapture(vid_file);
+        cap = cv::VideoCapture(vid_file);
     }
     
 	//camera frame is captured
@@ -47,18 +76,20 @@ int main(int argc, char* argv[]){
         bool ret = false;
         int count = 0;
         int rc = 0;
-        rectangle_t bounds;
-        std::vector<rectangle_t> objects;
+        cv::Rect bounds;
+        std::vector<cv::Rect> objects;
         cv::Mat frame, bounded_frame;
         int32_t tag = 0;
         
         //set up plc communication
         if(use_plc){
             //put attribute string together
-            std::string attr_str = tag_attr_str[0];
-            for(int i = 1; i < 10; i++){ attr_str += tag_attr_str[i]; }
+            std::string attr_str = "";
+            for(int i = 0; i < 10; i++){
+                attr_str += tag_attr_str[i];
+            }
             //try to setup
-            rc = plc_setup(&tag,attr_str);    
+            rc = plc_setup(tag,attr_str.c_str());    
             if(rc != 0){ //check status
                 use_plc = false;
             }
@@ -77,22 +108,32 @@ int main(int argc, char* argv[]){
 				//process frame
 				cv::imshow("Original",frame);
                 bounds = detect_background(frame);
-                bounded_frame = frame[];//TODO
+                bounded_frame = frame(bounds);
 				objects = detect_objects(bounded_frame);
-                
                 //draw bounds around frame
-                cv::rectangle();
+                cv::Scalar colour(255,0,0);
+                cv::rectangle(frame, bounds, colour);
                 //draw grid
-                cv::line();
-                for(int i = 0; i < 8; i++){ cv::line(); }
+                cv::line(frame, cv::Point(bounds.x+int(bounds.width*0.5), bounds.y), cv::Point(bounds.x+int(bounds.width*0.5), bounds.y+bounds.height), colour);
+                for(int i = 0; i < 8; i++){
+                    cv::line(frame, cv::Point(bounds.x, bounds.y+int(bounds.height*i*0.125)), cv::Point(bounds.x+bounds.width, bounds.y+int(bounds.height*i*0.125)), colour);
+                }
                 //draw object locations
                 int32_t write_val = 0;
+                cv::Point p;
+                cv::Rect r;
+                grid_point_t g;
+                colour = cv::Scalar(0,0,255);
                 for(auto it = objects.begin(); it != objects.end(); ++it){
-                    grid_point_t grid_pt();
-                    cv::rectangle(); //object bounds
-                    cv::circle(); //object midpoint
-                    cv::puText(); //object location
-                    write_val |= (1 << grid_pt.grid_idx);
+                    p = cv::Point(bounds.x + ((it->x * 2 + it->width) / 2), bounds.y + ((it->y * 2 + it->height) / 2));
+                    g = grid_point_t(p, bounds.width, bounds.height);//get grid index
+                    r = cv::Rect(it->x + bounds.x, it->y + bounds.y, it->width, it->height);
+                    cv::rectangle(frame, r, colour); //object bounds
+                    cv::circle(frame , p, 2, colour); //object midpoint
+                    std::stringstream ss;
+                    ss << std::fixed << std::setprecision(2) << "(" << g.x << ", " << g.y << ")";
+                    cv::putText(frame, ss.str(), p, cv::FONT_HERSHEY_SIMPLEX, 0.5, colour); //object location
+                    write_val |= (1 << g.grid_idx);
                 }
                 //write to PLC
                 if(use_plc){
@@ -100,7 +141,7 @@ int main(int argc, char* argv[]){
                     rc = plc_tag_write(tag,DATA_TIMEOUT);
                     
                     if(rc != PLCTAG_STATUS_OK) {
-                        std::cerr << "ERROR: Unable to write to tag. Error code " << rc << ": " << plc_tag_decode_error(rc));
+                        std::cerr << "ERROR: Unable to write to tag. Error code " << rc << ": " << plc_tag_decode_error(rc);
                         plc_tag_destroy(tag);
                         use_plc = false;
                     }
@@ -150,26 +191,27 @@ int main(int argc, char* argv[]){
 	}
 }
 
-static void usage(std::string str){
-    std::cerr << "Usage: " << str << std::endl;
+static void usage(std::string str, std::string opt){
+    std::cerr << "Usage: " << str << " with option " << opt << std::endl;
     std::cerr << "Options: " << std::endl;
-    std::cerr << "\t-h\t\t show this help message\n" << std::endl;
-    std::cerr << "\t-v\t\t video file name. default is pi USB camera\n" << std::endl;
-    std::cerr << "\t-i\t\t ip address of PLC\n" << std::endl;
-    std::cerr << "\t-r\t\t route to PLC\n" << std::endl;
-    std::cerr << "\t-t\t\t PLC output tag name\n" << std::endl;
-    std::cerr << "\t-p\t\t don't use PLC\n" << std::endl;
+    std::cerr << "\t-h\t\t show this help message" << std::endl;
+    std::cerr << "\t-v\t\t video file name - default is pi USB camera" << std::endl;
+    std::cerr << "\t-i\t\t ip address of PLC" << std::endl;
+    std::cerr << "\t-r\t\t route to PLC" << std::endl;
+    std::cerr << "\t-t\t\t PLC output tag name" << std::endl;
+    std::cerr << "\t-p\t\t don't use PLC" << std::endl;
 }
-int plc_setup(int32_t &tag, std::string attr_str) {
+
+int plc_setup(int32_t &tag, const char * attr_str) {
     if(plc_tag_check_lib_version(REQUIRED_VERSION) != PLCTAG_STATUS_OK) {
-        std::cerr << "Required compatible libplctag library version: " << REQUIRED_VERSION << std::endl;
+        std::cerr << "Required compatible libplctag library version: 2.1.0" << std::endl;
         return -1;
     }
     
     tag = plc_tag_create(attr_str, DATA_TIMEOUT);
     
     if(tag < 0) {
-        std::cerr << "ERROR" << plc_tag_decode_error(led_tag) << ": Could not create tag" << std::endl;
+        std::cerr << "ERROR" << plc_tag_decode_error(tag) << ": Could not create tag" << std::endl;
         return -2;
     }
     if(plc_tag_status(tag) != PLCTAG_STATUS_OK) {
@@ -180,12 +222,54 @@ int plc_setup(int32_t &tag, std::string attr_str) {
     
     return 0;
 }
-cv::Mat process_frame(cv::Mat im){
-    return im;
+
+cv::Rect detect_background(cv::Mat im){
+    cv::Mat gray, blur, thresh, edges;
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i> hierarchy;
+    //blur and convert to grayscale
+    cv::cvtColor(im, gray, cv::COLOR_BGR2GRAY);
+    cv::medianBlur(gray, blur, 5);
+    cv::threshold(blur, thresh, 230, 255, cv::THRESH_BINARY);
+    cv::Canny(thresh, edges, 0, 255);
+    cv::findContours(edges, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+    int idx = get_largest_contour(contours);
+    if(idx < 0){
+        return cv::Rect();
+    }
+    return cv::boundingRect(contours[idx]);
 }
-rectangle_t detect_background(cv::Mat im){
-    return rectangle_t();
+
+std::vector<cv::Rect> detect_objects(cv::Mat im){
+    std::vector<cv::Rect> locations;
+    cv::Mat hsv, gray, mask, masked;
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i> hierarchy;
+    
+    cv::cvtColor(im, hsv, cv::COLOR_BGR2HSV);
+    cv::inRange(hsv, cv::Scalar(MIN_HUE, MIN_SATURATION, MIN_VALUE), cv::Scalar(MAX_HUE, MAX_SATURATION, MAX_VALUE), mask);
+    cv::bitwise_and(im, im, masked, mask);
+    cv::cvtColor(masked, gray, cv::COLOR_BGR2GRAY);
+    
+    cv::findContours(gray, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+    for(int i = 0; i < contours.size(); i++){
+        double area = cv::contourArea(contours[i]);
+        if(area > MIN_AREA){
+            locations.push_back(cv::boundingRect(contours[i]));
+        }
+    }
+    return locations;
 }
-std::vector<rectangle_t> detect_objects(cv::Mat im){
-    return rectangle_t();
+
+int get_largest_contour(std::vector<std::vector<cv::Point>> contours){
+    double max_area = 0;
+    int idx = -1;
+    for(int i = 0; i < contours.size(); i++){
+        double area = cv::contourArea(contours[i]);
+        if(area > max_area){
+            max_area = area;
+            idx = i;
+        }
+    }
+    return idx;
 }

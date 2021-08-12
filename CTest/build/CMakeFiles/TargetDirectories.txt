@@ -1,5 +1,7 @@
-/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/batten_detect.dir
 /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/rebuild_cache.dir
 /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/image_filter.dir
-/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/edit_cache.dir
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/plc_vision.dir
 /home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/plc_comm_test.dir
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/simple_image_filter.dir
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/edit_cache.dir
+/home/pi/Desktop/PythonProjects/BattenVisionML/CTest/build/CMakeFiles/batten_detect.dir
