@@ -14,7 +14,6 @@
 //PLC Communication Library
 #include <libplctag.h>
 
-
 //Standard Libraries
 //#include <stdio.h>
 //#include <stdlib.h>
@@ -57,6 +56,30 @@
 #define MIN_VALUE				245
 #define MAX_VALUE				255
 
+/**
+ * A struct that holds the a coordinate point relative to the corner
+ * of a pice of paper in inches and the grid index for a 2x8 grid
+ * oriented in the manner shown here:
+ * 
+ * 				+-------+-------+
+ * 				+   0   +   8   +
+ * 				+-------+-------+
+ *	 			+   1   +   9   +
+ * 				+-------+-------+
+ * 				+   2   +   10  +
+ * 				+-------+-------+
+ * 				+   3   +   11  +
+ * 				+-------+-------+
+ * 				+   4   +   12  +
+ * 				+-------+-------+
+ * 				+   5   +   13  +
+ * 				+-------+-------+
+ * 				+   6   +   14  +
+ * 				+-------+-------+
+ * 				+   7   +   15  +
+ * 				+-------+-------+
+ * 
+**/
 struct grid_point_t {
 	double x;
 	double y;
@@ -91,11 +114,72 @@ struct grid_point_t {
 	}
 };
 
+/**
+ * Print help message for command line arguments
+ * 
+ * @param prog the name of the program
+ * @param opt the option that caused the error
+**/
 static void usage(std::string str, std::string opt);
+
+/**
+ * Setup to communicate with plc
+ * 
+ * @param tag the tag handle
+ * @param attr_str the attribute string for the PLC tag: see libplctag 
+ * documentation for more info: https://github.com/libplctag/libplctag
+ * @return error code: 0 for success, -1 for incompatible library version,
+ * -2 for tag creation error, -3 for tag status error after creation
+**/
 int plc_setup(int32_t &tag, const char * attr_str);
+
+/**
+ * Find the dimensions and location of the background
+ * 
+ * @param im the video frame
+ * @return the bounding rectangle for the white sheet of paper
+ * or an empty rectangle if no contours were found
+**/
 cv::Rect detect_background(cv::Mat im);
+
+/**
+ * Detect objects that are within a certain color range
+ * which is defined in the PLCVision.h header file
+ * 
+ * @param im the video frame
+ * @return a vector of rectangles. each of the rectangles is a bounding
+ * rectangle for a contour.
+**/
 std::vector<cv::Rect> detect_objects(cv::Mat im);
+
+/**
+ * Get the index of the largest contour in a vector of contours
+ * 
+ * @param contours a vector of contours
+ * @return the index of the largest contour, or -1 if the vector is empty
+**/
 int get_largest_contour(std::vector<std::vector<cv::Point>> contours);
+
+/**
+ * Draw the bounds of the paper and the 2x8 grid on the video frame
+ * 
+ * @param frame the video frame
+ * @param bounds the bounding rectangle around the paper
+ * @param color the color to make the grid and rectangle
+**/
+void draw_bounds(cv::Mat frame, cv::Rect bounds, cv::Scalar color);
+
+/**
+ * Draw and label the bounds of the objects on the paper in the 2x8 grid
+ * 
+ * @param frame the video frame
+ * @param bounds the bounding rectangle around the paper
+ * @param objects the bounding rectangles of the objects
+ * @param color the color to make the grid and rectangle
+ * @return the value to write to a plc tag to light up leds in a 2x8 grid
+ * that correspond to the objects
+**/
+int32_t label_objects(cv::Mat frame, cv::Rect bounds, std::vector<cv::Rect> objects, cv::Scalar color);
 
 #ifdef __cplusplus
 extern "C" {
