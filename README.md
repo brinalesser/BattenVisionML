@@ -43,5 +43,7 @@ with a USB camera. For the purpose of detecting battens to pick up with a roboti
 ├── PencilTest.py                 # Detects a stack of pencils on a white sheet of paper, then marks the edges of individual pencils (proof of concept test)
 ├── README.md                     # This
 ├── TrackbarTest.py               # Shows the effects of different values on edge detection
-└── mp4Tojpg.py                   # Used to save screenshots from video as jpgs
+├── mp4Tojpg.py                   # Used to save screenshots from video as jpgs
+├── powerflex_motor_velocity.py   # Sample program from cpppo library to write to powerflex 755
+└── poll_example.py               # Sample program from cpppo library to read from powerflex 755
 ```
