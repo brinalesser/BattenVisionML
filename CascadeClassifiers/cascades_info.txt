@@ -1,0 +1,17 @@
+HAAR
+-data ./cascade1 -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 200 -numNeg 100 -numStages 10
+
+-data ./cascade2 -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 200 -numNeg 100 -numStages 20
+
+-data ./cascade3 -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 200 -numNeg 400 -numStages 10
+
+-data ./cascade4 -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 200 -numNeg 400 -numStages 20
+
+LBP
+-data ./cascade5 -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 200 -numNeg 100 -numStages 10 -featureType LBP
+
+-data ./cascade6 -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 200 -numNeg 100 -numStages 20 -featureType LBP
+
+-data ./cascade7 -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 200 -numNeg 400 -numStages 10 -featureType LBP
+
+-data ./cascade8 -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 200 -numNeg 400 -numStages 20 -featureType LBP

@@ -1,0 +1,8 @@
+neg_img/img1.jpg
+neg_img/img2.jpg
+neg_img/img4.jpg
+neg_img/img5.jpg
+neg_img/img6.jpg
+neg_img/img7.jpg
+neg_img/img8.jpg
+neg_img/img9.jpg

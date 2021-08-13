@@ -9,6 +9,7 @@ with a USB camera. For the purpose of detecting battens to pick up with a roboti
 
 ```
 .
+├── CascadeClassifiers            # Attempts at creating Cascade Classifier model for object detection
 ├── CTest                         # C++ code for vision processing
 │   ├── build                     # Folder containing CMake files made by CMakeLists.txt
 │   │   ├── bin                   # Folder containing the binary executables for the C++ programs
@@ -31,7 +32,6 @@ with a USB camera. For the purpose of detecting battens to pick up with a roboti
 ├── Videos                        # Folder containing videos of battens to test code with
 ├── BackgroundRemovalTest.py      # Removes a settable background from a video (useful for stationary camera and unchanging background)
 ├── BattenTest.py                 # Attempt to use color filtering + Canny edge detection + contours to detect a stack of battens then identify edges of individual battens
-├── CascadeClassifiers.zip        # Cascade classifiers created when testing object detection methods - none of these models accurately detect battens
 ├── ColorTest.py                  # Attempt to use color filtering to detect a stack of battens, then identify edges of individual battens
 ├── ColorTuneBGR.py               # Used to find the BGR color values in a frame
 ├── ColorTuneHSV.py               # Used to find the HSV color values in a frame
